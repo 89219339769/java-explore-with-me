@@ -23,14 +23,14 @@ class EndpointHit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column( nullable = false)
+    @Column(nullable = false)
     private String app;
 
     @Column(nullable = false)
-    private String  uri;
+    private String uri;
 
     @Column(nullable = false)
-    private String   ip;
+    private String ip;
 
     @Column(nullable = false)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
