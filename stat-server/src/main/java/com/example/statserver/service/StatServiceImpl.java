@@ -91,10 +91,16 @@ public class StatServiceImpl implements StatService {
                 })
                 .collect(Collectors.toList());
 
-        for (ViewStats viewStat : viewStatsSort)
+        for (ViewStats viewStat : viewStatsSort) {
             if (uris.contains(viewStat.getUri()))
                 viewStatsSortFiltred.add(viewStat);
-        return viewStatsSortFiltred;
+        }
+
+        System.out.println(viewStatsSortFiltred.get(0).equals(viewStatsSortFiltred.get(1)));
+        List<ViewStats> uniqueDataList = viewStatsSortFiltred.stream()
+                .distinct()
+                .collect(Collectors.toList());
+        return uniqueDataList;
     }
 }
 
