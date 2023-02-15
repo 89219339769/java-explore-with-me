@@ -16,11 +16,4 @@ public interface StatRepository extends JpaRepository<EndpointHit, Long> {
     List<EndpointHit> getStat(LocalDateTime start, LocalDateTime end);
 
 
-    @Query(
-            value = "SELECT id, app, uri,  DISTINCT ip, timestamp  FROM EndpointHit" +
-                    "where e.timestamp between ?1 and ?2",
-            nativeQuery = true)
-    List<EndpointHit> findHitCountByUri(LocalDateTime start, LocalDateTime end);
-
-
 }

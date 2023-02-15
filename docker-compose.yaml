@@ -23,23 +23,23 @@ services:
 
 
 
-#  stats-server:
-#    build: stat-server
-#    container_name: explore-with-me-stats
-#    depends_on:
-#      - stats-db
-#    ports:
-#      - "9090:9090"
-#    environment:
-#      - SPRING_DATASOURCE_URL=jdbc:postgresql://stats-db:5432/Stats
-#
-#  stats-db:
-#    image: postgres:14-alpine
-#    container_name: explore-with-me-stats-postgres
-#    ports:
-#      - "6540:5432"
-#    environment:
-#      - POSTGRES_DB=Stats
-#      - POSTGRES_USER=postgres
-#      - POSTGRES_PASSWORD=iamroot
+  stats-server:
+    build: stat-server
+    container_name: explore-with-me-stats
+    depends_on:
+      - stats-db
+    ports:
+      - "9090:9090"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://stats-db:5432/Stats
+
+  stats-db:
+    image: postgres:14-alpine
+    container_name: explore-with-me-stats-postgres
+    ports:
+      - "6540:5432"
+    environment:
+      - POSTGRES_DB=Stats
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=iamroot
 

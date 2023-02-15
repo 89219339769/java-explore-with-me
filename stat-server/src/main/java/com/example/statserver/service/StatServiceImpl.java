@@ -38,7 +38,7 @@ public class StatServiceImpl implements StatService {
         }
     }
 
-    public List<ViewStats> getUniqIpStat(LocalDateTime startDate, LocalDateTime endDate, List<String> uris) {
+    private List<ViewStats> getUniqIpStat(LocalDateTime startDate, LocalDateTime endDate, List<String> uris) {
         List<EndpointHit> endpointHitsUniq = statRepository.getStat(startDate, endDate);
         List<ViewStats> viewStats = new ArrayList<>();
 
@@ -63,7 +63,7 @@ public class StatServiceImpl implements StatService {
         return sortAndFind(viewStats, uris);
     }
 
-    public List<ViewStats> getAllIpStat(LocalDateTime startDate, LocalDateTime endDate, List<String> uris) {
+    private List<ViewStats> getAllIpStat(LocalDateTime startDate, LocalDateTime endDate, List<String> uris) {
         List<EndpointHit> endpointHits = statRepository.getStat(startDate, endDate);
         List<ViewStats> viewStats = new ArrayList<>();
 
@@ -82,7 +82,7 @@ public class StatServiceImpl implements StatService {
         return sortAndFind(viewStats, uris);
     }
 
-    public List<ViewStats> sortAndFind(List<ViewStats> viewStatsSort, List<String> uris) {
+    private List<ViewStats> sortAndFind(List<ViewStats> viewStatsSort, List<String> uris) {
         List<ViewStats> viewStatsSortFiltred = new ArrayList<>();
         viewStatsSort = viewStatsSort.stream()
                 .sorted((o1, o2) -> {
