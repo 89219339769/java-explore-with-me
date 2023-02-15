@@ -96,7 +96,6 @@ public class StatServiceImpl implements StatService {
                 viewStatsSortFiltred.add(viewStat);
         }
 
-        System.out.println(viewStatsSortFiltred.get(0).equals(viewStatsSortFiltred.get(1)));
         List<ViewStats> uniqueDataList = viewStatsSortFiltred.stream()
                 .distinct()
                 .collect(Collectors.toList());
