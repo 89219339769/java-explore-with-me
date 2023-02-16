@@ -10,8 +10,14 @@
 
     <artifactId>stats_server</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
 
-    <name>Stat</name>
+    <name>stats_server</name>
+    <modules>
+        <module>stat-dto</module>
+        <module>stat-client</module>
+        <module>stat-src</module>
+    </modules>
 
     <dependencies>
         <dependency>
@@ -60,14 +66,7 @@
         </dependency>
     </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
+
 
 
 
