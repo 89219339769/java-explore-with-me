@@ -51,11 +51,15 @@ public class StatServiceImpl implements StatService {
                     viewStatsFiltred.add(endpointHitsUniq.get(j));
             }
             List<String> hitsIp = new ArrayList<>();
-            for (int j = 0; j < viewStatsFiltred.size(); j++) {
-                hitsIp.add(viewStatsFiltred.get(j).getIp());
-            }
+
             List<String> listWithoutDuplicates = new ArrayList<>(
                     new HashSet<>(hitsIp));
+
+
+            for (int j = 0; j < viewStatsFiltred.size(); j++) {
+                listWithoutDuplicates.add(viewStatsFiltred.get(j).getIp());
+            }
+
             int hitCount = listWithoutDuplicates.size();
 
             viewStats.add(new ViewStats(endpointHitsUniq.get(i).getApp(), endpointHitsUniq.get(i).getUri(), hitCount));
@@ -96,10 +100,9 @@ public class StatServiceImpl implements StatService {
                 viewStatsSortFiltred.add(viewStat);
         }
 
-        List<ViewStats> uniqueDataList = viewStatsSortFiltred.stream()
+        return viewStatsSortFiltred.stream()
                 .distinct()
                 .collect(Collectors.toList());
-        return uniqueDataList;
     }
 }
 
