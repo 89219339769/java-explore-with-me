@@ -30,7 +30,7 @@ public class StatServiceImpl implements StatService {
         LocalDateTime startDate = LocalDateTime.parse(start, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         LocalDateTime endDate = LocalDateTime.parse(end, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
-        if (Boolean.TRUE.equals(unique)) {
+        if (unique) {
             return getUniqIpStat(startDate, endDate, uris);
 
         } else {
