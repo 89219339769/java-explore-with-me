@@ -2,6 +2,7 @@ package com.example.mainserver.event.controller;
 
 import com.example.mainserver.event.EventService;
 import com.example.mainserver.event.model.EventDto;
+import com.example.mainserver.event.model.UpdateEventAdminRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -26,9 +27,9 @@ public class EventControllerAdmin {
 //    }
 
     @PatchMapping("/{eventId}/publish")
-    public EventDto publishEvent(@PathVariable Long eventId) {
+    public EventDto publishEvent(@PathVariable Long eventId,  @RequestBody UpdateEventAdminRequest updateEventAdminRequest) {
         log.info("publish event with id {} by admin", eventId);
-        return eventService.publishEvent(eventId);
+        return eventService.publishEvent(eventId, updateEventAdminRequest);
     }
 
 //    @PatchMapping("/{eventId}/reject")

@@ -2,6 +2,7 @@ package com.example.mainserver.event;
 
 import com.example.mainserver.event.model.EventDto;
 import com.example.mainserver.event.model.NewEventDto;
+import com.example.mainserver.event.model.UpdateEventAdminRequest;
 
 public interface EventService {
   //  List<ShortEventDto> getEvents(String text, List<Long> categoryIds, Boolean paid, String rangeStart, String rangeEnd,
@@ -15,7 +16,9 @@ public interface EventService {
 
     public EventDto createEvent(Long userId, NewEventDto eventDto);
 
-    EventDto publishEvent(Long eventId);
+    EventDto publishEvent(Long eventId, UpdateEventAdminRequest updateEventAdminRequest);
+
+    EventDto getEvent(Long id);
 
     //   EventDto getEventByUser(Long eventId, Long userId);
 
