@@ -15,6 +15,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
+import static com.example.mainserver.event.model.State.PENDING;
+import static com.example.mainserver.event.model.State.PUBLISHED;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -51,6 +54,23 @@ public class EventServiceImpl implements EventService{
         return EventMapper.toEventDto(eventRepository.save(event));
     }
 
+    @Override
+    public EventDto publishEvent(Long eventId) {
+
+
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new RuntimeException("event with id = " + eventId + " not found"));
+        if (event.getEventDate().isBefore(LocalDateTime.now().plusHours(1))) {
+            throw new  RuntimeException("event must start min after one hour of now");
+        }
+        if (!event.getState().equals(PENDING)) {
+            throw new RuntimeException("state of event must be PENDING");
+        }
+        event.setState(PUBLISHED);
+
+        return EventMapper.toEventDto(eventRepository.save(event));
+
+    }
 
 
 }

@@ -1,6 +1,7 @@
-package com.example.mainserver.event;
+package com.example.mainserver.event.controller;
 
 
+import com.example.mainserver.event.EventService;
 import com.example.mainserver.event.model.EventDto;
 import com.example.mainserver.event.model.NewEventDto;
 import lombok.extern.slf4j.Slf4j;

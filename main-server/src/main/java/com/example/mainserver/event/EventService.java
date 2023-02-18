@@ -15,6 +15,8 @@ public interface EventService {
 
     public EventDto createEvent(Long userId, NewEventDto eventDto);
 
+    EventDto publishEvent(Long eventId);
+
     //   EventDto getEventByUser(Long eventId, Long userId);
 
 //    EventDto cancelEventByUser(Long eventId, Long userId);
