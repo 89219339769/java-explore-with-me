@@ -2,8 +2,9 @@ package com.example.mainserver.event;
 
 import com.example.mainserver.category.repository.CategoryRepository;
 import com.example.mainserver.event.model.*;
-import com.example.mainserver.exceptions.NotFoundException;
+import com.example.mainserver.exceptions.CategoryNotFoundException;
 
+import com.example.mainserver.exceptions.WrongDateException;
 import com.example.mainserver.location.model.Location;
 import com.example.mainserver.location.LocationRepository;
 import com.example.mainserver.user.UserRepository;
@@ -11,6 +12,8 @@ import com.example.mainserver.user.model.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @Slf4j
 @Service
@@ -34,13 +37,13 @@ public class EventServiceImpl implements EventService{
                 .orElseThrow(() -> new RuntimeException("user with id = " + userId + " not found"));
 
        Event event = EventMapper.toEvent(eventDto);
-//        if (event.getEventDate().isBefore(LocalDateTime.now().plusHours(2))) {
-//            throw new BadRequestException("date event is too late");
-//        }
+       if (event.getEventDate().isBefore(LocalDateTime.now())) {
+            throw new WrongDateException("Field: eventDate. Error: должно содержать дату, которая еще не наступила. Value:" +(event.getEventDate()));
+        }
         Location location = locationRepository.save(eventDto.getLocation());
 
         event.setCategory(categoryRepository.findById(eventDto.getCategory())
-                .orElseThrow(() -> new NotFoundException("category not found")));
+                .orElseThrow(() -> new CategoryNotFoundException("Field: category. Error: must not be blank. Value: null")));
 
 
         event.setLocation(location);

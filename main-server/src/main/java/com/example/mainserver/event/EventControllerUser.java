@@ -4,42 +4,34 @@ package com.example.mainserver.event;
 import com.example.mainserver.event.model.EventDto;
 import com.example.mainserver.event.model.NewEventDto;
 import lombok.extern.slf4j.Slf4j;
-        import org.springframework.web.bind.annotation.*;
-        import javax.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 @Slf4j
 @RestController
 @RequestMapping("/users/{userId}/events")
 public class  EventControllerUser {
     private final EventService eventService;
- //   private final ParticipationService participationService;
+    //   private final ParticipationService participationService;
 
-    public  EventControllerUser(EventService eventService) {
+    public EventControllerUser(EventService eventService) {
         this.eventService = eventService;
-     //   this.participationService = participationService;
+        //   this.participationService = participationService;
     }
-
-//    @GetMapping
-//    public List<ShortEventDto> getUserEvents(@PathVariable Long userId,
-//                                             @RequestParam (defaultValue = "0") int from,
-//                                             @RequestParam (defaultValue = "10") int size) {
-//        log.info("get events added by user with id {}", userId);
-//        return eventService.getUserEvents(userId, from, size);
-//    }
-
-//    @PatchMapping
-//    public EventDto updateEvent(@PathVariable Long userId,
-//                                @RequestBody UserUpdateEventDto eventDto) {
-//        log.info("update event by owner with id {}", userId);
-//        return eventService.updateEvent(userId, eventDto);
-//    }
 
     @PostMapping
     public EventDto createEvent(@PathVariable Long userId,
-                                @Valid @RequestBody NewEventDto neweventDto) {
+                                @Valid @RequestBody NewEventDto neweventDto,
+                                HttpServletResponse response) {
         log.info("create event by user with id {}", userId);
+        response.setStatus(401);
         return eventService.createEvent(userId, neweventDto);
     }
+}
 
 //    @GetMapping("/{eventId}")
 //    public EventDto getEventByUser(@PathVariable Long userId,
@@ -77,4 +69,3 @@ public class  EventControllerUser {
 //        log.info("reject participation requests {} by owner {} of event with id {}", reqId, userId, eventId);
 //        return participationService.rejectParticipationRequest(eventId, userId, reqId);
 //    }
-}
