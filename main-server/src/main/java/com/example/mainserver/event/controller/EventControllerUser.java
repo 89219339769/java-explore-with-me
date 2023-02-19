@@ -1,9 +1,11 @@
 package com.example.mainserver.event.controller;
 
-
+import com.example.mainserver.participation.ParticipationService;
 import com.example.mainserver.event.EventService;
 import com.example.mainserver.event.model.EventDto;
 import com.example.mainserver.event.model.NewEventDto;
+import com.example.mainserver.participation.model.ParticipationDto;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,23 +16,33 @@ import javax.validation.Valid;
 
 @Slf4j
 @RestController
-@RequestMapping("/users/{userId}/events")
+@AllArgsConstructor
+@RequestMapping
 public class  EventControllerUser {
     private final EventService eventService;
-    //   private final ParticipationService participationService;
+    private final ParticipationService participationService;
 
-    public EventControllerUser(EventService eventService) {
-        this.eventService = eventService;
-        //   this.participationService = participationService;
-    }
+//    public EventControllerUser(EventService eventService) {
+//        this.eventService = eventService;
+//        //   this.participationService = participationService;
+//    }
 
-    @PostMapping
+    @PostMapping("/users/{userId}/events")
     public EventDto createEvent(@PathVariable Long userId,
                                 @Valid @RequestBody NewEventDto neweventDto,
                                 HttpServletResponse response) {
         log.info("create event by user with id {}", userId);
         response.setStatus(401);
         return eventService.createEvent(userId, neweventDto);
+    }
+
+
+    @PatchMapping("/users/{userId}/events/{eventId}/requests/{reqId}")
+    public ParticipationDto confirmParticipationRequest(@PathVariable Long userId,
+                                                        @PathVariable Long eventId,
+                                                        @PathVariable Long reqId) {
+        log.info("confirm participation requests {} by owner {} of event with id {}", reqId, userId, eventId);
+        return participationService.confirmParticipationRequest(eventId, userId, reqId);
     }
 }
 

@@ -11,5 +11,5 @@ public interface ParticipationService {
     public ParticipationDto createParticipationRequest(Long userId, Long eventId);
 
 
-
+    ParticipationDto confirmParticipationRequest(Long eventId, Long userId, Long reqId);
 }

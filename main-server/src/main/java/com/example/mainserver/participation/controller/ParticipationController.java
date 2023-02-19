@@ -28,6 +28,17 @@ public class ParticipationController {
         return participationService.createParticipationRequest(userId, eventId);
     }
 
+
+    @PatchMapping
+    public ParticipationDto approveParticipationRequest(@PathVariable Long userId,
+                                                       @RequestParam Long eventId) {
+        log.info("create participation request by user {} to event {}", userId, eventId);
+        return participationService.createParticipationRequest(userId, eventId);
+    }
+
+
+
+
 //    @PatchMapping("/{requestId}/cancel")
 //    public ParticipationDto cancelParticipationRequest(@PathVariable Long userId,
 //                                                       @PathVariable Long requestId) {

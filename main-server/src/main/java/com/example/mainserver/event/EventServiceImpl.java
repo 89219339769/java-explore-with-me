@@ -58,36 +58,48 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventDto publishEvent(Long eventId, UpdateEventAdminRequest updateEventAdminRequest) {
 
-
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new RuntimeException("event with id = " + eventId + " not found"));
         if (event.getEventDate().isBefore(LocalDateTime.now().plusHours(1))) {
             throw new RuntimeException("event must start min after one hour of now");
         }
 
-        Category category = categoryRepository.findById(updateEventAdminRequest.getCategory())
-                .orElseThrow(() -> new RuntimeException("category with id = " + updateEventAdminRequest.getCategory() + " not found"));
+        if (updateEventAdminRequest.getCategory() != null) {
+            Category category = categoryRepository.findById(updateEventAdminRequest.getCategory())
+                    .orElseThrow(() -> new RuntimeException("category with id = " + updateEventAdminRequest.getCategory() + " not found"));
+            event.setCategory(category);
+        }
+        if (updateEventAdminRequest.getAnnotation() != null) {
+            event.setAnnotation(updateEventAdminRequest.getAnnotation());
+        }
 
+        if (updateEventAdminRequest.getDescription() != null) {
+            event.setDescription(updateEventAdminRequest.getDescription());
+        }
+        if (updateEventAdminRequest.getEventDate() != null) {
+            LocalDateTime eventDate = LocalDateTime.parse(updateEventAdminRequest.getEventDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            event.setEventDate(eventDate);
+        }
+        if (updateEventAdminRequest.getLocation() != null) {
+            Location location = locationRepository.findById(event.getLocation().getId())
+                    .orElseThrow(() -> new RuntimeException("user with id = " + event.getLocation().getId() + " not found"));
+            location.setLat(updateEventAdminRequest.getLocation().getLat());
+            location.setLon(updateEventAdminRequest.getLocation().getLon());
+            event.setLocation(location);
+        }
+        if (updateEventAdminRequest.getPaid() != null) {
+            event.setPaid(updateEventAdminRequest.getPaid());
+        }
+        if (updateEventAdminRequest.getParticipantLimit() != null) {
+            event.setParticipantLimit(updateEventAdminRequest.getParticipantLimit());
+        }
+        if (updateEventAdminRequest.getRequestModeration() != null) {
+            event.setRequestModeration(updateEventAdminRequest.getRequestModeration());
+        }
+        if (updateEventAdminRequest.getTitle() != null)
+            event.setTitle(updateEventAdminRequest.getTitle());
 
-        event.setAnnotation(updateEventAdminRequest.getAnnotation());
-        event.setCategory(category);
-        event.setDescription(updateEventAdminRequest.getDescription());
-
-        LocalDateTime eventDate = LocalDateTime.parse(updateEventAdminRequest.getEventDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        event.setEventDate(eventDate);
-
-        Location location = locationRepository.findById(event.getLocation().getId())
-                .orElseThrow(() -> new RuntimeException("user with id = " + event.getLocation().getId() + " not found"));
-        location.setLat(updateEventAdminRequest.getLocation().getLat());
-        location.setLon(updateEventAdminRequest.getLocation().getLon());
-        event.setLocation(location);
-        event.setPaid(updateEventAdminRequest.getPaid());
-        event.setParticipantLimit(updateEventAdminRequest.getParticipantLimit());
-        event.setRequestModeration(updateEventAdminRequest.getRequestModeration());
         event.setState(PUBLISHED);
-        event.setTitle(updateEventAdminRequest.getTitle());
-
-
         return EventMapper.toEventDto(eventRepository.save(event));
 
     }
@@ -99,7 +111,7 @@ public class EventServiceImpl implements EventService {
                 .orElseThrow(() -> new RuntimeException("event with id = " + id + " not found"));
 
         Long views = event.getViews();
-        event.setViews(views+1);
+        event.setViews(views + 1);
         eventRepository.save(event);
         return EventMapper.toEventDto(event);
     }
