@@ -13,11 +13,15 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CompilationDtoShort {
-//    private Long id;
-//
-//    private String title;
-//
-//    private Boolean pinned;
+
 
     private List<EventDtoShort> events;
+
+    private Long id;
+
+    private String title;
+
+    private Boolean pinned;
+
+
 }

@@ -1,6 +1,7 @@
-package com.example.mainserver.compilation;
+package com.example.mainserver.compilation.controller;
 
 
+import com.example.mainserver.compilation.CompilationService;
 import com.example.mainserver.compilation.model.Compilation;
 import com.example.mainserver.compilation.model.CompilationDto;
 import com.example.mainserver.compilation.model.CompilationDtoShort;

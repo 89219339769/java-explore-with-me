@@ -6,7 +6,6 @@ import com.example.mainserver.compilation.model.CompilationDtoShort;
 import com.example.mainserver.compilation.model.CompilationMapper;
 import com.example.mainserver.event.EventRepository;
 import com.example.mainserver.event.model.Event;
-import com.example.mainserver.participation.ParticipationRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +16,6 @@ import java.util.List;
 public class CompilationServiceImpl implements CompilationService {
     private final CompilationRepository compilationRepository;
     private final EventRepository eventRepository;
-    private final ParticipationRepository participationRepository;
-
     private final CompilationMapper compilationMapper;
 
     @Override
@@ -27,10 +24,18 @@ public class CompilationServiceImpl implements CompilationService {
         List<Event> events = eventRepository.findAllById(compilationDto.getEvents());
         compilation.setEvents(events);
         compilationRepository.save(compilation);
+        CompilationDtoShort compilationDtoShort = compilationMapper.toCompilationDtoShort(compilation);
+        return compilationDtoShort;
+    }
+
+    @Override
+    public CompilationDtoShort getCompilation(Long compId) {
+
+        Compilation compilation = compilationRepository.findById(compId)
+                .orElseThrow(() -> new RuntimeException("compilation with id = " + compId + " not found"));
 
         CompilationDtoShort compilationDtoShort = compilationMapper.toCompilationDtoShort(compilation);
-
-
         return compilationDtoShort;
+
     }
 }

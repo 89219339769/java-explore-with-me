@@ -12,6 +12,8 @@ public interface CompilationService {
 
     CompilationDtoShort createCompilation(CompilationDto compilationDto);
 
+    CompilationDtoShort getCompilation(Long compId);
+
 //    void deleteCompilation(Long id);
 //
 //    void deleteEventFromCompilation(Long id, Long eventId);

@@ -44,9 +44,9 @@ public class CompilationMapper {
 
             return CompilationDtoShort
                     .builder()
-//                    .id(compilation.getId())
-//                    .title(compilation.getTitle())
-//                    .pinned(compilation.getPinned())
+                    .id(compilation.getId())
+                    .title(compilation.getTitle())
+                    .pinned(compilation.getPinned())
                     .events(eventsDtpShort)
                     .build();
     }
