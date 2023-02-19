@@ -47,4 +47,19 @@ public class EventMapper {
                 .views(event.getViews())
                 .build();
     }
+
+
+    public static EventDtoShort toEventDtoShort(Event event) {
+        return EventDtoShort
+                .builder()
+                .id(event.getId())
+                .annotation(event.getAnnotation())
+                .category(event.getCategory())
+                .eventDate(event.getEventDate().format(DATE_TIME_FORMATTER))
+                .initiator(UserMapping.toUserDto(event.getInitiator()))
+                .paid(event.getPaid())
+                .title(event.getTitle())
+                .views(event.getViews())
+                .build();
+    }
 }
