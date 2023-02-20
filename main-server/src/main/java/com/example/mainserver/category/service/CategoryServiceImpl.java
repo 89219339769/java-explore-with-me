@@ -3,6 +3,8 @@ package com.example.mainserver.category.service;
 
 import com.example.mainserver.category.model.Category;
 import com.example.mainserver.category.repository.CategoryRepository;
+import com.example.mainserver.exceptions.CategoryNotFounfExeption;
+import com.example.mainserver.exceptions.CompilationNotFounfExeption;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -34,29 +36,28 @@ public class CategoryServiceImpl implements CategoryService {
 //        return CategoryMapper.toCategoryDto(getAndCheckCategory(id));
 //    }
 
-//    @Override
-//    public CategoryDto updateCategory(CategoryDto categoryDto) {
-//        Category category = getAndCheckCategory(categoryDto.getId());
-//        category.setName(categoryDto.getName());
-//        return CategoryMapper.toCategoryDto(categoryRepository.save(category));
-//    }
+    @Override
+    public Category updateCategory(Category categoryDto, Long catId) {
+        Category category =  categoryRepository.findById(catId)
+                .orElseThrow(() -> new CategoryNotFounfExeption("Category with id = " + catId + " not found"));
+
+
+        category.setName(categoryDto.getName());
+        return categoryRepository.save(category);
+    }
 
     @Override
     public Category createCategory(Category category) {
         return categoryRepository.save(category);
     }
 
- //   @Override
-//    public void deleteCategory(Long id) {
-////        if (!eventRepository.findAllByCategoryId(id).isEmpty()) {
-////            throw new BadRequestException("only category without event can be delete");
-////        }
-//        categoryRepository.delete(getAndCheckCategory(id));
-//    }
+    @Override
+    public void deleteCategory(Long id) {
 
-//    private Category getAndCheckCategory(Long id) {
-//        return categoryRepository.findById(id)
-//                .orElseThrow(() -> new NotFoundException("Category with id = " + id + " not found"));
-//    }
+        Category category =  categoryRepository.findById(id)
+                .orElseThrow(() -> new CategoryNotFounfExeption("Category with id = " + id + " not found"));
 
+
+        categoryRepository.delete(category);
+    }
 }

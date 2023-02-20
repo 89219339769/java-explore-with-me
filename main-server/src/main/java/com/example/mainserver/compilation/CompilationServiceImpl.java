@@ -6,6 +6,8 @@ import com.example.mainserver.compilation.model.CompilationDtoShort;
 import com.example.mainserver.compilation.model.CompilationMapper;
 import com.example.mainserver.event.EventRepository;
 import com.example.mainserver.event.model.Event;
+import com.example.mainserver.exceptions.CompilationNotFounfExeption;
+import com.example.mainserver.exceptions.EventNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -58,7 +60,7 @@ public class CompilationServiceImpl implements CompilationService {
     public CompilationDtoShort getCompilation(Long compId) {
 
         Compilation compilation = compilationRepository.findById(compId)
-                .orElseThrow(() -> new RuntimeException("compilation with id = " + compId + " not found"));
+                .orElseThrow(() -> new CompilationNotFounfExeption("compilation with id = " + compId + " not found"));
         return compilationMapper.toCompilationDtoShort(compilation);
     }
 

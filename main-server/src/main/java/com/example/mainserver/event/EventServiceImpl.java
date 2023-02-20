@@ -3,7 +3,7 @@ package com.example.mainserver.event;
 import com.example.mainserver.category.model.Category;
 import com.example.mainserver.category.repository.CategoryRepository;
 import com.example.mainserver.event.model.*;
-import com.example.mainserver.exceptions.CategoryNotFoundException;
+import com.example.mainserver.exceptions.EventNotFoundException;
 
 import com.example.mainserver.exceptions.WrongDateException;
 import com.example.mainserver.location.model.Location;
@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import static com.example.mainserver.event.model.State.PENDING;
 import static com.example.mainserver.event.model.State.PUBLISHED;
 
 @Slf4j
@@ -47,7 +46,7 @@ public class EventServiceImpl implements EventService {
         Location location = locationRepository.save(eventDto.getLocation());
 
         event.setCategory(categoryRepository.findById(eventDto.getCategory())
-                .orElseThrow(() -> new CategoryNotFoundException("Field: category. Error: must not be blank. Value: null")));
+                .orElseThrow(() -> new EventNotFoundException("Field: category. Error: must not be blank. Value: null")));
 
 
         event.setLocation(location);

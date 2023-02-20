@@ -1,4 +1,4 @@
-package com.example.mainserver.event.model;
+package com.example.mainserver.exceptions;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 

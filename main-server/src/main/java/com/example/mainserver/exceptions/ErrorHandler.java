@@ -1,7 +1,6 @@
 package com.example.mainserver.exceptions;
 
 
-import com.example.mainserver.event.model.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -37,7 +36,7 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse objectWrongEnterExeption(final CategoryNotFoundException e) {
+    public ErrorResponse objectWrongEnterExeption(final EventNotFoundException e) {
         return new ErrorResponse(e.getMessage(), "BAD_REQUEST", "Incorrectly made request.",
                 LocalDateTime.now());
     }
@@ -47,6 +46,31 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponse objectWrongEnterExeption(final WrongDateException e) {
         return new ErrorResponse(e.getMessage(), "FORBIDDEN", "For the requested operation the conditions are not met.",
+                LocalDateTime.now());
+    }
+
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse objectWrongEnterExeption(final CompilationNotFounfExeption e) {
+        return new ErrorResponse(e.getMessage(), "NOT_FOUND", "The required object was not found.",
+                LocalDateTime.now());
+    }
+
+
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse objectWrongEnterExeption(final WrongNameException e) {
+        return new ErrorResponse(e.getMessage(), "BAD_REQUEST", "Incorrectly made request.",
+                LocalDateTime.now());
+    }
+
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse objectWrongEnterExeption(final CategoryNotFounfExeption e) {
+        return new ErrorResponse(e.getMessage(), "NOT_FOUND", "The required object was not found.",
                 LocalDateTime.now());
     }
 
