@@ -54,18 +54,26 @@ public class CompilationServiceImpl implements CompilationService {
         return compilationDtoListWithPinned;
     }
 
-   private  List<CompilationDtoShort> getCompilationWithOutPinned(int from, int size, Pageable pageable){
-       pageable = PageRequest.of(from, size, Sort.by(Sort.Direction.ASC, "id"));
-       Page<Compilation> compilations = compilationRepository.findAll(pageable);
+    @Override
+    public CompilationDtoShort getCompilation(Long compId) {
 
-       List<Compilation> compilationsList = compilations.getContent();
-       List<CompilationDtoShort> compilationDtoList = new ArrayList<>();
+        Compilation compilation = compilationRepository.findById(compId)
+                .orElseThrow(() -> new RuntimeException("compilation with id = " + compId + " not found"));
+        return compilationMapper.toCompilationDtoShort(compilation);
+    }
 
-       for (Compilation compilation : compilationsList) {
-           compilationDtoList.add(compilationMapper.toCompilationDtoShort(compilation));
-       }
-       return compilationDtoList;
-   }
+    private List<CompilationDtoShort> getCompilationWithOutPinned(int from, int size, Pageable pageable) {
+        pageable = PageRequest.of(from, size, Sort.by(Sort.Direction.ASC, "id"));
+        Page<Compilation> compilations = compilationRepository.findAll(pageable);
+
+        List<Compilation> compilationsList = compilations.getContent();
+        List<CompilationDtoShort> compilationDtoList = new ArrayList<>();
+
+        for (Compilation compilation : compilationsList) {
+            compilationDtoList.add(compilationMapper.toCompilationDtoShort(compilation));
+        }
+        return compilationDtoList;
+    }
 }
 
 

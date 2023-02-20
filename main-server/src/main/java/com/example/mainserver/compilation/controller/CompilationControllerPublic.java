@@ -35,14 +35,11 @@ public class CompilationControllerPublic {
     }
 
 
+    @GetMapping("/{compId}")
+    public CompilationDtoShort getCompilation(@PathVariable Long compId) {
+        log.info("get compilation with id" + compId);
 
+        return  compilationService.getCompilation(compId);
 
-
-
-
-
-
-
-
-
+    }
 }

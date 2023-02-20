@@ -17,6 +17,8 @@ public interface CompilationService {
 
     List<CompilationDtoShort> getCompilations(Boolean pinned, int from, int size, Pageable pageable);
 
+    CompilationDtoShort getCompilation(Long compId);
+
 
 //    void deleteCompilation(Long id);
 //
