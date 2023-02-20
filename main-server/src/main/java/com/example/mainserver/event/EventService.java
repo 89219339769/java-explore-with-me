@@ -3,6 +3,10 @@ package com.example.mainserver.event;
 import com.example.mainserver.event.model.EventDto;
 import com.example.mainserver.event.model.NewEventDto;
 import com.example.mainserver.event.model.UpdateEventAdminRequest;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 public interface EventService {
   //  List<ShortEventDto> getEvents(String text, List<Long> categoryIds, Boolean paid, String rangeStart, String rangeEnd,
@@ -19,6 +23,8 @@ public interface EventService {
     EventDto publishEvent(Long eventId, UpdateEventAdminRequest updateEventAdminRequest);
 
     EventDto getEvent(Long id);
+
+    List<EventDto> getEventByUser(Long userId, int from, int size);
 
     //   EventDto getEventByUser(Long eventId, Long userId);
 

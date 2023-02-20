@@ -12,10 +12,15 @@ import com.example.mainserver.user.UserRepository;
 import com.example.mainserver.user.model.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.example.mainserver.event.model.State.PUBLISHED;
 
@@ -113,6 +118,20 @@ public class EventServiceImpl implements EventService {
         event.setViews(views + 1);
         eventRepository.save(event);
         return EventMapper.toEventDto(event);
+    }
+
+    @Override
+    public List<EventDto> getEventByUser(Long userId, int from, int size) {
+
+
+        Pageable pageable = PageRequest.of(from, size, Sort.by(Sort.Direction.ASC, "id"));
+        List<Event> events = eventRepository.getEventsByUser(userId, pageable);
+        List<EventDto> eventDtos = new ArrayList<>();
+        for (Event event : events) {
+            eventDtos.add(EventMapper.toEventDto(event));
+        }
+
+        return eventDtos;
     }
 
 

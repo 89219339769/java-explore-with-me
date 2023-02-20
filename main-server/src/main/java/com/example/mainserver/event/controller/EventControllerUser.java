@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -44,14 +45,15 @@ public class  EventControllerUser {
         log.info("confirm participation requests {} by owner {} of event with id {}", reqId, userId, eventId);
         return participationService.confirmParticipationRequest(eventId, userId, reqId);
     }
-}
 
-//    @GetMapping("/{eventId}")
-//    public EventDto getEventByUser(@PathVariable Long userId,
-//                                   @PathVariable Long eventId) {
-//        log.info("get event with id {} by owner with id {}", eventId, userId);
-//        return eventService.getEventByUser(eventId, userId);
-//    }
+
+    @GetMapping("/users/{userId}/events")
+    public List<EventDto> getEventByUser(@PathVariable Long userId, @RequestParam int from, @RequestParam int size) {
+        log.info("get events  by owner ", userId);
+        return eventService.getEventByUser(userId, from, size);
+    }
+
+}
 
 //    @PatchMapping("/{eventId}")
 //    public EventDto cancelEventByUser(@PathVariable Long userId,
