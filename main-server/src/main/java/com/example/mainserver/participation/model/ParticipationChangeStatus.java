@@ -11,8 +11,8 @@ import java.util.List;
 
 public class ParticipationChangeStatus {
 
-   private List<Long> requestIds;
-  private final   StatusRequest status;
+    private List<Long> requestIds;
+    private final StatusRequest status;
 
     public ParticipationChangeStatus(List<Long> requestIds, StatusRequest statusRequest) {
         this.requestIds = requestIds;

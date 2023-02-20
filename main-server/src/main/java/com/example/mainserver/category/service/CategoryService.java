@@ -2,6 +2,8 @@ package com.example.mainserver.category.service;
 
 import com.example.mainserver.category.model.Category;
 
+import java.util.List;
+
 public interface CategoryService {
 //    List<CategoryDto> getCategories(int from, int size);
 //
@@ -12,4 +14,8 @@ public interface CategoryService {
     Category createCategory(Category category);
 
     void deleteCategory(Long id);
+
+    List<Category> getCategories(int from, int size);
+
+    Category getCategory(Long catId);
 }
