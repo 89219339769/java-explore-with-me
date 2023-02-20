@@ -7,8 +7,10 @@ import com.example.mainserver.compilation.model.CompilationMapper;
 import com.example.mainserver.event.EventRepository;
 import com.example.mainserver.event.model.Event;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -29,13 +31,41 @@ public class CompilationServiceImpl implements CompilationService {
     }
 
     @Override
-    public CompilationDtoShort getCompilation(Long compId) {
+    public List<CompilationDtoShort> getCompilations(Boolean pinned, int from, int size, Pageable pageable) {
 
-        Compilation compilation = compilationRepository.findById(compId)
-                .orElseThrow(() -> new RuntimeException("compilation with id = " + compId + " not found"));
+        if (pinned == null) {
+            return getCompilationWithOutPinned(from, size, pageable);
+        }
+        pageable = PageRequest.of(from, size, Sort.by(Sort.Direction.ASC, "id"));
+        Page<Compilation> compilations = compilationRepository.findAll(pageable);
 
-        CompilationDtoShort compilationDtoShort = compilationMapper.toCompilationDtoShort(compilation);
-        return compilationDtoShort;
+        List<Compilation> compilationsList = compilations.getContent();
+        List<CompilationDtoShort> compilationDtoList = new ArrayList<>();
+        List<CompilationDtoShort> compilationDtoListWithPinned = new ArrayList<>();
 
+        for (Compilation compilation : compilationsList) {
+            compilationDtoList.add(compilationMapper.toCompilationDtoShort(compilation));
+        }
+        for (CompilationDtoShort compilationDtoShort : compilationDtoList) {
+            if (compilationDtoShort.getPinned() == true) {
+                compilationDtoListWithPinned.add(compilationDtoShort);
+            }
+        }
+        return compilationDtoListWithPinned;
     }
+
+   private  List<CompilationDtoShort> getCompilationWithOutPinned(int from, int size, Pageable pageable){
+       pageable = PageRequest.of(from, size, Sort.by(Sort.Direction.ASC, "id"));
+       Page<Compilation> compilations = compilationRepository.findAll(pageable);
+
+       List<Compilation> compilationsList = compilations.getContent();
+       List<CompilationDtoShort> compilationDtoList = new ArrayList<>();
+
+       for (Compilation compilation : compilationsList) {
+           compilationDtoList.add(compilationMapper.toCompilationDtoShort(compilation));
+       }
+       return compilationDtoList;
+   }
 }
+
+
