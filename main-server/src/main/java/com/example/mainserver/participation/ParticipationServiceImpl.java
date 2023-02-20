@@ -1,17 +1,16 @@
 package com.example.mainserver.participation;
 
-
 import com.example.mainserver.event.EventRepository;
-import com.example.mainserver.event.model.Event;
 import com.example.mainserver.participation.model.Participation;
+import com.example.mainserver.participation.model.ParticipationChangeStatus;
 import com.example.mainserver.participation.model.ParticipationDto;
 import com.example.mainserver.participation.model.ParticipationMapper;
 import com.example.mainserver.user.UserRepository;
-import com.example.mainserver.user.model.User;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.mainserver.event.model.State.PUBLISHED;
@@ -60,23 +59,32 @@ public class ParticipationServiceImpl implements ParticipationService {
     }
 
     @Override
-    public ParticipationDto confirmParticipationRequest(Long eventId, Long userId, Long reqId) {
-        Participation participation = participationRepository.findById(reqId)
-                .orElseThrow(() -> new RuntimeException("event with id = " + eventId + " not found"));
-        Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new RuntimeException("event with id = " + eventId + " not found"));
+    public List<ParticipationDto> confirmParticipationRequest(Long userId, Long eventId, ParticipationChangeStatus participationChangeStatus) {
+        List<ParticipationDto> participations = new ArrayList<>();
+        List<Long> participationIds = participationChangeStatus.getRequestIds();
 
-        if (!participation.getStatus().equals(PENDING)) {
-            throw new RuntimeException("only participation request with status pending can be approval");
+        for (Long participationId : participationIds) {
+            Participation participation = participationRepository.findById(participationId)
+                    .orElseThrow(() -> new RuntimeException("event with id = " + eventId + " not found"));
+            if (!participation.getStatus().equals(PENDING)) {
+                throw new RuntimeException("only participation request with status pending can be approval");
+            }
+
+            List<Participation> listPart = participationRepository.getParticipations(eventId);
+            if (participation.getEvent().getParticipantLimit() <= listPart.size()) {
+                participation.setStatus(REJECTED);
+            } else {
+                participation.setStatus(participationChangeStatus.getStatus());
+            }
+            participations.add(ParticipationMapper.toParticipationDto(participation));
         }
-        List<Participation> listPart = participationRepository.getParticipations(eventId);
+        return participations;
+    }
 
-        if (participation.getEvent().getParticipantLimit() <= listPart.size()) {
-            participation.setStatus(REJECTED);
+    @Override
+    public ParticipationDto getParticipationRequest(Long userId, Long eventId) {
+        Participation participation = participationRepository.getParticipationRequest(userId, eventId);
+        return ParticipationMapper.toParticipationDto(participation);
 
-        } else {
-            participation.setStatus(CONFIRMED);
-        }
-        return ParticipationMapper.toParticipationDto(participationRepository.save(participation));
     }
 }

@@ -1,6 +1,7 @@
 package com.example.mainserver.event;
 
 import com.example.mainserver.event.model.EventDto;
+import com.example.mainserver.event.model.EventDtoShort;
 import com.example.mainserver.event.model.NewEventDto;
 import com.example.mainserver.event.model.UpdateEventAdminRequest;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,9 +23,11 @@ public interface EventService {
 
     EventDto publishEvent(Long eventId, UpdateEventAdminRequest updateEventAdminRequest);
 
-    EventDto getEvent(Long id);
+    EventDto getEvent(Long userId, Long eventId);
 
-    List<EventDto> getEventByUser(Long userId, int from, int size);
+    List<EventDtoShort> getEventByUser(Long userId, int from, int size);
+
+    EventDto putchEvent(Long userId, Long eventId, EventDtoShort eventDtoShort);
 
     //   EventDto getEventByUser(Long eventId, Long userId);
 

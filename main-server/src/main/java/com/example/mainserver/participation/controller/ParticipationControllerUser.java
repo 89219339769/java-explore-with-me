@@ -7,11 +7,11 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/users/{userId}/requests")
-public class ParticipationController {
+@RequestMapping
+public class ParticipationControllerUser {
     private final ParticipationServiceImpl participationService;
 
-    public ParticipationController(ParticipationServiceImpl participationService) {
+    public ParticipationControllerUser(ParticipationServiceImpl participationService) {
         this.participationService = participationService;
     }
 
@@ -21,7 +21,7 @@ public class ParticipationController {
 //        return participationService.getParticipationRequests(userId);
 //    }
 
-    @PostMapping
+    @PostMapping("/users/{userId}/requests")
     public ParticipationDto createParticipationRequest(@PathVariable Long userId,
                                                        @RequestParam Long eventId) {
         log.info("create participation request by user {} to event {}", userId, eventId);
@@ -29,7 +29,7 @@ public class ParticipationController {
     }
 
 
-    @PatchMapping
+    @PatchMapping("/users/{userId}/requests")
     public ParticipationDto approveParticipationRequest(@PathVariable Long userId,
                                                        @RequestParam Long eventId) {
         log.info("create participation request by user {} to event {}", userId, eventId);
@@ -39,10 +39,20 @@ public class ParticipationController {
 
 
 
-//    @PatchMapping("/{requestId}/cancel")
-//    public ParticipationDto cancelParticipationRequest(@PathVariable Long userId,
-//                                                       @PathVariable Long requestId) {
-//        log.info("cancel participation request {} by user {}", requestId, userId);
-//        return participationService.cancelParticipationRequest(userId, requestId);
-//    }
+
+
+
+
+
+
+
+    @GetMapping("/users/{userId}/events/{eventId}/request")
+    public ParticipationDto getParticipationRequest(@PathVariable Long userId,
+                                                    @PathVariable Long eventId) {
+        log.info("get participation request by user {} to event {}", userId, eventId);
+        return participationService.getParticipationRequest(userId, eventId);
+    }
+
+
+
 }

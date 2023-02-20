@@ -14,4 +14,11 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     @Query("select e from Event e  where e.initiator.id = ?1 " +
             "order by e.createdOn asc")
     List<Event> getEventsByUser(Long userId, Pageable pageable);
+
+
+    @Query("select e from Event e  where e.initiator.id = ?1 and e.id =?2 " +
+            "order by e.createdOn asc")
+    Event getEventByUser(Long userId, Long eventId);
+
+
 }

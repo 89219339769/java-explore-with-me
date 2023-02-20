@@ -74,6 +74,28 @@ public class ErrorHandler {
                 LocalDateTime.now());
     }
 
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse objectWrongEnterExeption(final WrongEventCreationException e) {
+        return new ErrorResponse(e.getMessage(), "BAD_REQUEST", "Incorrectly made request.",
+                LocalDateTime.now());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse objectWrongEnterExeption(final WrongTimeEventCreationException e) {
+        return new ErrorResponse(e.getMessage(), "FORBIDDEN", "Incorrectly made request.",
+                LocalDateTime.now());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse objectWrongEnterExeption(final EventPublishedException e) {
+        return new ErrorResponse(e.getMessage(), "BAD_REQUEST", "For the requested operation the conditions are not met.",
+                LocalDateTime.now());
+    }
+
+
 
 
 }

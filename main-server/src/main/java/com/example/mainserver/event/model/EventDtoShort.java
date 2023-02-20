@@ -1,6 +1,7 @@
 package com.example.mainserver.event.model;
 
 import com.example.mainserver.category.model.Category;
+import com.example.mainserver.location.model.Location;
 import com.example.mainserver.location.model.LocationDto;
 import com.example.mainserver.user.model.UserDto;
 import lombok.*;
@@ -17,24 +18,24 @@ public class EventDtoShort {
 
     private String annotation;
 
+    private Location location;
 
     private Integer confirmedRequests;
 
     private Category category;
 
-
+    private String descripsion;
     private String eventDate;
 
     private UserDto initiator;
 
-
+    private  int ParticipantLimit;
     private Boolean paid;
 
-
+    private boolean requestModeration;
     private String title;
 
     private Long views;
-
 
 
 }

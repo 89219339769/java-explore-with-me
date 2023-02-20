@@ -38,11 +38,11 @@ public class  EventControllerPublic {
 //        return eventService.getEvents(text, categoryIds, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size);
 //    }
 
-    @GetMapping("/{id}")
-    public EventDto getEvent(@PathVariable Long id,
-                             HttpServletRequest httpServletRequest) {
-        log.info("get event with id {}", id);
-     //   eventClient.createHit(httpServletRequest);
-        return eventService.getEvent(id);
-    }
+//    @GetMapping("/{id}")
+//    public EventDto getEvent(@PathVariable Long id,
+//                             HttpServletRequest httpServletRequest) {
+//        log.info("get event with id {}", id);
+//     //   eventClient.createHit(httpServletRequest);
+//        return eventService.getEvent(id);
+//    }
 }

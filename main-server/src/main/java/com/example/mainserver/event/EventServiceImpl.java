@@ -5,6 +5,7 @@ import com.example.mainserver.category.repository.CategoryRepository;
 import com.example.mainserver.event.model.*;
 import com.example.mainserver.exceptions.EventNotFoundException;
 
+import com.example.mainserver.exceptions.EventPublishedException;
 import com.example.mainserver.exceptions.WrongDateException;
 import com.example.mainserver.location.model.Location;
 import com.example.mainserver.location.LocationRepository;
@@ -39,8 +40,6 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventDto createEvent(Long userId, NewEventDto eventDto) {
-        //    User user = checkAndGetUser(userId);
-
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("user with id = " + userId + " not found"));
 
@@ -109,11 +108,11 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventDto getEvent(Long id) {
+    public EventDto getEvent(Long userId, Long eventId) {
 
-        Event event = eventRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("event with id = " + id + " not found"));
-
+        Event event = eventRepository.getEventByUser(userId, eventId);
+        if (event == null)
+            throw new EventNotFoundException("Event with id=" + eventId + " was not found");
         Long views = event.getViews();
         event.setViews(views + 1);
         eventRepository.save(event);
@@ -121,18 +120,57 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<EventDto> getEventByUser(Long userId, int from, int size) {
+    public List<EventDtoShort> getEventByUser(Long userId, int from, int size) {
 
 
         Pageable pageable = PageRequest.of(from, size, Sort.by(Sort.Direction.ASC, "id"));
         List<Event> events = eventRepository.getEventsByUser(userId, pageable);
-        List<EventDto> eventDtos = new ArrayList<>();
+        List<EventDtoShort> eventDtos = new ArrayList<>();
         for (Event event : events) {
-            eventDtos.add(EventMapper.toEventDto(event));
+            eventDtos.add(EventMapper.toEventDtoShort(event));
         }
 
         return eventDtos;
     }
 
+    @Override
+    public EventDto putchEvent(Long userId, Long eventId, EventDtoShort eventDtoShort) {
+        Event event = eventRepository.getEventByUser(userId, eventId);
+
+        if (event.getState() == PUBLISHED)
+            throw new EventPublishedException("Event must  be published");
+        if (event == null)
+            throw new EventNotFoundException("Event with id = " + eventId + " was not found");
+        if (eventDtoShort.getAnnotation() != null) {
+            event.setAnnotation(eventDtoShort.getAnnotation());
+        }
+
+        if (eventDtoShort.getDescripsion() != null) {
+            event.setDescription(eventDtoShort.getDescripsion());
+        }
+
+        if (eventDtoShort.getEventDate() != null) {
+            LocalDateTime startEvent = LocalDateTime.parse(eventDtoShort.getEventDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            event.setEventDate(startEvent);
+        }
+        if (eventDtoShort.getLocation() != null)
+            event.setLocation(eventDtoShort.getLocation());
+
+        if (eventDtoShort.getPaid() != null) {
+            event.setPaid(eventDtoShort.getPaid());
+        }
+
+        if (eventDtoShort.getParticipantLimit() != 0) {
+            event.setParticipantLimit(eventDtoShort.getParticipantLimit());
+        }
+
+        if (eventDtoShort.getTitle() != null) {
+            event.setTitle(eventDtoShort.getTitle());
+        }
+        return EventMapper.toEventDto(event);
+    }
+
 
 }
+
+
