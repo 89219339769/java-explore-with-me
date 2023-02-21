@@ -2,7 +2,9 @@ package com.example.mainserver.event;
 
 import com.example.mainserver.category.model.Category;
 import com.example.mainserver.category.repository.CategoryRepository;
+import com.example.mainserver.compilation.model.Compilation;
 import com.example.mainserver.event.model.*;
+import com.example.mainserver.exceptions.CompilationNotFounfExeption;
 import com.example.mainserver.exceptions.EventNotFoundException;
 
 import com.example.mainserver.exceptions.EventPublishedException;
@@ -224,10 +226,78 @@ public class EventServiceImpl implements EventService {
         return listEventToListEventDto(listEvent);
     }
 
+    @Override
+    public List<EventDtoShort> getEventsPublic(String text, List<Long> categoryIds, Boolean paid, String rangeStart, String rangeEnd, String sort, int from, int size) {
+        LocalDateTime start = LocalDateTime.parse(rangeStart, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        LocalDateTime end = LocalDateTime.parse(rangeEnd, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        Pageable pageable = PageRequest.of(from, size, Sort.by(Sort.Direction.ASC, "id"));
+
+        List<EventDtoShort> listEventToListEventDtoShort = new ArrayList<>();
+
+        if (sort != null) {
+            List<Event> listEventDateSortIdCategory = new ArrayList<>();
+            if (sort.equals("EVENT_DATE")) {
+                List<Event> listEventDate = eventRepository.getEventsPublicSortDate(text, paid, start, end, pageable);
+
+                if (categoryIds != null) {
+                    for (Long id : categoryIds) {
+                        listEventDateSortIdCategory = listEventDate.stream()
+                                .filter(event -> event.getCategory().getId() == id)
+                                .collect(Collectors.toList());
+                    }
+                    return listEventToListEventDtoShort(listEventDateSortIdCategory);
+                }
+                return listEventToListEventDtoShort(listEventDate);
+
+            }
+
+            if (sort.equals("VIEWS")) {
+                List<Event> listEventViewsSortIdCategory = new ArrayList<>();
+                List<Event> listEventViews = eventRepository.getEventsPublicSortDateViews(text, paid, start, end, pageable);
+                if (categoryIds != null) {
+                    for (Long id : categoryIds) {
+                        listEventDateSortIdCategory = listEventViews.stream()
+                                .filter(event -> event.getCategory().getId() == id)
+                                .collect(Collectors.toList());
+                    }
+                    return listEventToListEventDtoShort(listEventDateSortIdCategory);
+                }
+                return listEventToListEventDtoShort(listEventViews);
+            }
+        }
+        List<Event> list1 = new ArrayList<>();
+        list1 = eventRepository.getEventsPublic(text, paid, start, end, pageable);
+        return listEventToListEventDtoShort(list1);
+
+    }
+
+    @Override
+    public EventDto getEventPublic(Long id) {
+
+        Event event = eventRepository.findById( id)
+                .orElseThrow(() -> new EventNotFoundException("Event with id=" + id + " was not found"));
+
+        Long views = event.getViews();
+        event.setViews(views + 1);
+        eventRepository.save(event);
+        return EventMapper.toEventDto(event);
+
+
+    }
+
+
     private List<EventDto> listEventToListEventDto(List<Event> events) {
         List<EventDto> listEventDto = new ArrayList<>();
         for (Event event : events) {
             listEventDto.add(EventMapper.toEventDto(event));
+        }
+        return listEventDto;
+    }
+
+    private List<EventDtoShort> listEventToListEventDtoShort(List<Event> events) {
+        List<EventDtoShort> listEventDto = new ArrayList<>();
+        for (Event event : events) {
+            listEventDto.add(EventMapper.toEventDtoShort(event));
         }
         return listEventDto;
     }

@@ -26,6 +26,21 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             "order by e.createdOn asc")
     List<Event> getEventsByAdmin(LocalDateTime rangeStart, LocalDateTime rangeEnd, Pageable pageable);
 
+    @Query("select e from Event e  where   e.eventDate > ?3 and e.eventDate < ?4 and upper(e.description) like upper(concat('%', ?1, '%'))" +
+            "and e.paid = ?2 " +
+            "order by e.createdOn asc")
+    List<Event> getEventsPublicSortDate(String text, Boolean paid, LocalDateTime rangeStart,
+                                        LocalDateTime rangeEnd, Pageable pageable);
 
+    @Query("select e from Event e  where   e.eventDate > ?3 and e.eventDate < ?4 and upper(e.description) like upper(concat('%', ?1, '%'))" +
+            "and e.paid = ?2 " +
+            "order by e.views asc")
+    List<Event> getEventsPublicSortDateViews(String text, Boolean paid, LocalDateTime rangeStart,
+                                             LocalDateTime rangeEnd, Pageable pageable);
+
+    @Query("select e from Event e  where   e.eventDate > ?3 and e.eventDate < ?4 and upper(e.description) like upper(concat('%', ?1, '%'))" +
+            "and e.paid = ?2 " )
+    List<Event> getEventsPublic(String text, Boolean paid, LocalDateTime rangeStart,
+                                             LocalDateTime rangeEnd, Pageable pageable);
 
 }
