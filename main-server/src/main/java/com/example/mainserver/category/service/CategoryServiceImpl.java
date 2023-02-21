@@ -1,11 +1,8 @@
 package com.example.mainserver.category.service;
 
-
 import com.example.mainserver.category.model.Category;
 import com.example.mainserver.category.repository.CategoryRepository;
-import com.example.mainserver.compilation.model.Compilation;
 import com.example.mainserver.exceptions.CategoryNotFounfExeption;
-import com.example.mainserver.exceptions.CompilationNotFounfExeption;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -22,26 +19,6 @@ import java.util.List;
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
-//    private final EventRepository eventRepository;
-
-//    public CategoryServiceImpl(CategoryRepository categoryRepository) {
-//        this.categoryRepository = categoryRepository;
-//    //    this.eventRepository = eventRepository;
-//    }
-
-    //   @Override
-//    public List<CategoryDto> getCategories(int from, int size) {
-//        return categoryRepository.findAll(PageRequest.of(from / size, size))
-//                .stream()
-//                .map(CategoryMapper::toCategoryDto)
-//                .collect(Collectors.toList());
-//    }
-
-//    @Override
-//    @Transactional(readOnly = true)
-//    public CategoryDto getCategory(Long id) {
-//        return CategoryMapper.toCategoryDto(getAndCheckCategory(id));
-//    }
 
     @Override
     public Category updateCategory(Category categoryDto, Long catId) {
@@ -60,11 +37,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void deleteCategory(Long id) {
-
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new CategoryNotFounfExeption("Category with id = " + id + " not found"));
-
-
         categoryRepository.delete(category);
     }
 

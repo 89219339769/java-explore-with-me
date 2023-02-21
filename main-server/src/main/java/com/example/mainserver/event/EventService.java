@@ -29,6 +29,8 @@ public interface EventService {
 
     EventDto putchEvent(Long userId, Long eventId, EventDtoShort eventDtoShort);
 
+    List<EventDto> getEventsByAdmin(List<Long> users, List<String> states, List<Long> categories, String rangeStart, String rangeEnd, int from, int size);
+
     //   EventDto getEventByUser(Long eventId, Long userId);
 
 //    EventDto cancelEventByUser(Long eventId, Long userId);

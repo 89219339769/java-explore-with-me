@@ -22,6 +22,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.example.mainserver.event.model.State.PUBLISHED;
 
@@ -32,7 +33,7 @@ public class EventServiceImpl implements EventService {
 
 
     private final EventRepository eventRepository;
-    //  private final ParticipationRepository participationRepository;
+
     private final CategoryRepository categoryRepository;
     private final LocationRepository locationRepository;
     private final UserRepository userRepository;
@@ -170,7 +171,64 @@ public class EventServiceImpl implements EventService {
         return EventMapper.toEventDto(event);
     }
 
+    @Override
+    public List<EventDto> getEventsByAdmin(List<Long> users, List<String> states, List<Long> categories, String rangeStart, String rangeEnd, int from, int size) {
+        LocalDateTime start = LocalDateTime.parse(rangeStart, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        LocalDateTime end = LocalDateTime.parse(rangeEnd, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        Pageable pageable = PageRequest.of(from, size, Sort.by(Sort.Direction.ASC, "id"));
+        List<Event> listEvent = eventRepository.getEventsByAdmin(start, end, pageable);
 
+        List<Event> listEventSortUsers = new ArrayList<>();
+        List<Event> listEventSortStates = new ArrayList<>();
+        List<Event> listEventSortCategories = new ArrayList<>();
+
+        if (users != null && states == null && categories == null) {
+            for (Long userId : users) {
+                listEventSortUsers = listEvent.stream()
+                        .filter(eventId -> eventId.getInitiator().getId() == userId)
+                        .collect(Collectors.toList());
+                return listEventToListEventDto(listEventSortUsers);
+            }
+        }
+        if (users != null && states != null && categories == null) {
+            for (Long userId : users) {
+                listEventSortUsers = listEvent.stream()
+                        .filter(eventId -> eventId.getInitiator().getId() == userId)
+                        .collect(Collectors.toList());
+            }
+            for (String state : states) {
+                listEventSortStates = listEventSortUsers.stream()
+                        .filter(event -> event.getState().equals(state))
+                        .collect(Collectors.toList());
+            }
+            return listEventToListEventDto(listEventSortStates);
+        }
+        if (users != null && states != null && categories != null) {
+            for (Long userId : users) {
+                listEventSortUsers = listEvent.stream()
+                        .filter(eventId -> eventId.getInitiator().getId() == userId)
+                        .collect(Collectors.toList());
+            }
+            for (String state : states) {
+                listEventSortStates = listEventSortUsers.stream()
+                        .filter(event -> event.getState().equals(state))
+                        .collect(Collectors.toList());
+            }
+            for (Long evetnCategory : categories) {
+                listEventSortCategories = listEventSortStates.stream()
+                        .filter(event -> event.getCategory().getId() == (evetnCategory))
+                        .collect(Collectors.toList());
+                return listEventToListEventDto(listEventSortCategories);
+            }
+        }
+        return listEventToListEventDto(listEvent);
+    }
+
+    private List<EventDto> listEventToListEventDto(List<Event> events) {
+        List<EventDto> listEventDto = new ArrayList<>();
+        for (Event event : events) {
+            listEventDto.add(EventMapper.toEventDto(event));
+        }
+        return listEventDto;
+    }
 }
-
-
