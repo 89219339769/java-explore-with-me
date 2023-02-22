@@ -4,6 +4,7 @@ import com.example.statserver.model.EndpointHit;
 import com.example.statserver.model.ViewStats;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -21,8 +22,10 @@ public class StatServiceImpl implements StatService {
     private final StatRepository statRepository;
 
     @Override
-    public void saveStat(EndpointHit endpointHit) {
-        statRepository.save(endpointHit);
+    public EndpointHit saveStat(EndpointHit endpointHit) {
+
+        return    statRepository.save(endpointHit);
+
     }
 
     @Override
@@ -88,19 +91,20 @@ public class StatServiceImpl implements StatService {
 
     private List<ViewStats> sortAndFind(List<ViewStats> viewStatsSort, List<String> uris) {
         List<ViewStats> viewStatsSortFiltred = new ArrayList<>();
-        viewStatsSort = viewStatsSort.stream()
+        List<ViewStats> viewStatsSortFiltredUri = new ArrayList<>();
+        viewStatsSortFiltred = viewStatsSort.stream()
                 .sorted((o1, o2) -> {
                     int result = o1.getHits().compareTo(o2.getHits());
                     return result * -1;
                 })
                 .collect(Collectors.toList());
 
-        for (ViewStats viewStat : viewStatsSort) {
+        for (ViewStats viewStat :  viewStatsSortFiltred) {
             if (uris.contains(viewStat.getUri()))
-                viewStatsSortFiltred.add(viewStat);
+                viewStatsSortFiltredUri.add(viewStat);
         }
 
-        return viewStatsSortFiltred.stream()
+        return viewStatsSortFiltredUri.stream()
                 .distinct()
                 .collect(Collectors.toList());
     }

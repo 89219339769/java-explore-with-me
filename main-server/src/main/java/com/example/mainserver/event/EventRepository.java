@@ -39,6 +39,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
                                              LocalDateTime rangeEnd, Pageable pageable);
 
     @Query("select e from Event e  where   e.eventDate > ?3 and e.eventDate < ?4 and upper(e.description) like upper(concat('%', ?1, '%'))" +
+            "and upper(e.annotation) like upper(concat('%', ?1, '%'))" +
             "and e.paid = ?2 " )
     List<Event> getEventsPublic(String text, Boolean paid, LocalDateTime rangeStart,
                                              LocalDateTime rangeEnd, Pageable pageable);

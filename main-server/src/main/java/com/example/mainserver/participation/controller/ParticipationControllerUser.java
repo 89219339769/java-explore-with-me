@@ -37,13 +37,12 @@ public class ParticipationControllerUser {
     }
 
 
-
-
-
-
-
-
-
+    @PatchMapping("/users/{userId}/requests/{requestId}/cancel")
+    public ParticipationDto cancelParticipationRequest(@PathVariable Long userId,
+                                                       @PathVariable Long requestId) {
+        log.info("cancel participation request {} by user {}", requestId, userId);
+        return participationService.cancelParticipationRequest(userId, requestId);
+    }
 
 
     @GetMapping("/users/{userId}/events/{eventId}/request")
@@ -52,6 +51,12 @@ public class ParticipationControllerUser {
         log.info("get participation request by user {} to event {}", userId, eventId);
         return participationService.getParticipationRequest(userId, eventId);
     }
+
+
+
+
+
+
 
 
 

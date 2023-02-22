@@ -25,6 +25,8 @@ public interface ParticipationRepository  extends JpaRepository<Participation, L
             "order by p.created asc")
     Participation getParticipationRequest(Long userId, Long eventId);
 
-
+    @Query("select p from Participation p  where p.id = ?1 and p.requester.id = ?2 " +
+            "order by p.created asc")
+    Participation canselParticipationRequest(Long reqId, Long userId);
 
 }

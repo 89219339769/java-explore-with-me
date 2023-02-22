@@ -1,6 +1,7 @@
 package com.example.mainserver.participation;
 
 import com.example.mainserver.event.EventRepository;
+import com.example.mainserver.exceptions.ParticipationNoFoundException;
 import com.example.mainserver.participation.model.Participation;
 import com.example.mainserver.participation.model.ParticipationChangeStatus;
 import com.example.mainserver.participation.model.ParticipationDto;
@@ -86,5 +87,14 @@ public class ParticipationServiceImpl implements ParticipationService {
         Participation participation = participationRepository.getParticipationRequest(userId, eventId);
         return ParticipationMapper.toParticipationDto(participation);
 
+    }
+
+    @Override
+    public ParticipationDto cancelParticipationRequest(Long userId, Long reqId) {
+        Participation participation = participationRepository.canselParticipationRequest(reqId, userId);
+               if(participation==null)
+                throw  new ParticipationNoFoundException("Request with id=" + reqId+" was not found");
+        participation.setStatus(CANCELED);
+        return ParticipationMapper.toParticipationDto(participationRepository.save(participation));
     }
 }

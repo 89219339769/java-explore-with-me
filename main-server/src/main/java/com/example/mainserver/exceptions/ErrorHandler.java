@@ -95,7 +95,19 @@ public class ErrorHandler {
                 LocalDateTime.now());
     }
 
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse objectWrongEnterExeption(final ParticipationNoFoundException e) {
+        return new ErrorResponse(e.getMessage(), "NOT_FOUND", "The required object was not found.",
+                LocalDateTime.now());
+    }
 
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse objectWrongEnterExeption(final UserNotFoundException e) {
+        return new ErrorResponse(e.getMessage(), "NOT_FOUND", "The required object was not found.",
+                LocalDateTime.now());
+    }
 
 
 }

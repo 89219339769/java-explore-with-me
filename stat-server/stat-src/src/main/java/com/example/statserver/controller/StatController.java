@@ -20,9 +20,18 @@ public class StatController {
 
 
     @PostMapping("/hit")
-    public ResponseEntity create(@RequestBody EndpointHit endpointHit) {
+    public  ResponseEntity create(@RequestBody EndpointHit endpointHit,  HttpStatus  httpStatus) {
+
+       //    return    statService.saveStat(endpointHit);
         statService.saveStat(endpointHit);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+
+        // первый рабочий вариант
+         return new ResponseEntity<>(HttpStatus.CREATED);
+
+
+
+       // второй вариант дает и тело и статус
+       //    return (EndpointHit) new ResponseEntity<>( httpStatus.CREATED).getBody();
     }
 
 
