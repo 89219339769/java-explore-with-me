@@ -58,15 +58,6 @@ public class ErrorHandler {
     }
 
 
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse objectWrongEnterExeption(final WrongNameException e) {
-        return new ErrorResponse(e.getMessage(), "BAD_REQUEST", "Incorrectly made request.",
-                LocalDateTime.now());
-    }
-
-
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse objectWrongEnterExeption(final CategoryNotFounfExeption e) {
@@ -106,6 +97,37 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse objectWrongEnterExeption(final UserNotFoundException e) {
         return new ErrorResponse(e.getMessage(), "NOT_FOUND", "The required object was not found.",
+                LocalDateTime.now());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse objectWrongEnterExeption(final WrongCompilationCreation e) {
+        return new ErrorResponse(e.getMessage(), "BAD_REQUEST", "Incorrectly made request.",
+                LocalDateTime.now());
+    }
+
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse objectWrongEnterExeption(final WrongCategoryNameException e) {
+        return new ErrorResponse(e.getMessage(), "BAD_REQUEST", "Incorrectly made request.",
+                LocalDateTime.now());
+    }
+
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse objectWrongEnterExeption(final UserBadNameException e) {
+        return new ErrorResponse(e.getMessage(), "BAD_REQUEST", "Incorrectly made request.",
+                LocalDateTime.now());
+    }
+
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus. CONFLICT)
+    public ErrorResponse objectWrongEnterExeption(final WrongPatchException e) {
+        return new ErrorResponse(e.getMessage(), "BAD_REQUEST", "Incorrectly made request.",
                 LocalDateTime.now());
     }
 

@@ -19,7 +19,7 @@ public class EventControllerAdmin {
     }
 
 
-    @PatchMapping("/{eventId}/publish")
+    @PatchMapping("/{eventId}")
     public EventDto publishEvent(@PathVariable Long eventId, @RequestBody UpdateEventAdminRequest updateEventAdminRequest) {
         log.info("publish event with id {} by admin", eventId);
         return eventService.publishEvent(eventId, updateEventAdminRequest);

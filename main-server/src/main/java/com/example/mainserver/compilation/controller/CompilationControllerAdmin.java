@@ -1,15 +1,11 @@
 package com.example.mainserver.compilation.controller;
 
-
 import com.example.mainserver.compilation.CompilationService;
-import com.example.mainserver.compilation.model.Compilation;
 import com.example.mainserver.compilation.model.CompilationDto;
 import com.example.mainserver.compilation.model.CompilationDtoShort;
+import com.example.mainserver.exceptions.WrongCompilationCreation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -27,15 +23,28 @@ public class CompilationControllerAdmin {
     public CompilationDtoShort createCompilation(@Valid @RequestBody CompilationDto compilationDto) {
         log.info("create new compilation");
 
+
+
+        if(compilationDto.getTitle()==null){
+            throw new WrongCompilationCreation("Field: title. Error: must not be blank. Value: null");
+        }
         CompilationDtoShort compilationDtoShort = compilationService.createCompilation(compilationDto);
         return compilationDtoShort;
     }
-//
-//    @DeleteMapping("/{id}")
-//    public void deleteCompilation(@PathVariable Long id) {
-//        log.info("delete compilation with id {}", id);
-//        compilationService.deleteCompilation(id);
-//    }
+
+    @DeleteMapping("/{compId}")
+    public void deleteCompilation(@PathVariable Long compId) {
+        log.info("delete compilation with id {}", compId);
+        compilationService.deleteCompilation(compId);
+    }
+
+
+    @PatchMapping("/{compId}")
+    public CompilationDtoShort patchCompilation(@PathVariable Long compId, @Valid @RequestBody CompilationDto compilationDto) {
+        log.info("patch compilation with id {}", compId);
+      return   compilationService.putch(compId, compilationDto);
+    }
+
 //
 //    @DeleteMapping("/{id}/events/{eventId}")
 //    public void deleteEventFromCompilation(@PathVariable Long id,

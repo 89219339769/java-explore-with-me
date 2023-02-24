@@ -64,6 +64,44 @@ public class CompilationServiceImpl implements CompilationService {
         return compilationMapper.toCompilationDtoShort(compilation);
     }
 
+    @Override
+    public void deleteCompilation(Long compId) {
+        Compilation compilation = compilationRepository.findById(compId)
+                .orElseThrow(() -> new CompilationNotFounfExeption("compilation with id = " + compId + " not found"));
+        compilationRepository.deleteById(compId);
+
+
+    }
+
+    @Override
+    public CompilationDtoShort putch(Long compId, CompilationDto compilationDto) {
+        Compilation compilation = compilationRepository.findById(compId)
+                .orElseThrow(() -> new CompilationNotFounfExeption("compilation with id = " + compId + " not found"));
+
+        List<Event>events = new ArrayList<>();
+        for (Long compilId:compilationDto.getEvents()){
+            events.add(eventRepository.findById(compilId)
+                    .orElseThrow(() -> new CompilationNotFounfExeption("compilation with id = " + compilId + " not found")));
+        }
+
+        if(compilationDto.getEvents()!=null){
+            compilation.setEvents(events);
+        }
+        if(compilationDto.getPinned()!=null){
+            compilation.setPinned(compilationDto.getPinned());
+        }
+        if(compilationDto.getTitle()!=null)
+            compilation.setTitle(compilationDto.getTitle());
+        compilationRepository.save(compilation);
+        CompilationDtoShort compilationDtoShort = compilationMapper.toCompilationDtoShort(compilation);
+        return compilationDtoShort;
+    }
+
+
+
+
+
+
     private List<CompilationDtoShort> getCompilationWithOutPinned(int from, int size, Pageable pageable) {
         pageable = PageRequest.of(from, size, Sort.by(Sort.Direction.ASC, "id"));
         Page<Compilation> compilations = compilationRepository.findAll(pageable);

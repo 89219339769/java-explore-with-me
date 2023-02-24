@@ -27,5 +27,7 @@ public class UpdateEventAdminRequest {
     private Boolean requestModeration;
 
     private State state;
+
+    private String stateAction;
     private String title;
 }

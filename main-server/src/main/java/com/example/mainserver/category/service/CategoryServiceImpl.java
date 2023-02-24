@@ -3,6 +3,8 @@ package com.example.mainserver.category.service;
 import com.example.mainserver.category.model.Category;
 import com.example.mainserver.category.repository.CategoryRepository;
 import com.example.mainserver.exceptions.CategoryNotFounfExeption;
+import com.example.mainserver.exceptions.WrongCategoryNameException;
+import com.example.mainserver.exceptions.WrongPatchException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -25,13 +27,31 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = categoryRepository.findById(catId)
                 .orElseThrow(() -> new CategoryNotFounfExeption("Category with id = " + catId + " not found"));
 
+        Category categoryName = categoryRepository.getCategoryByName(categoryDto.getName());
+        if (categoryName != null) {
 
+            throw new WrongPatchException("уже существует категория с таким именем");
+        }
+
+        if (categoryDto.getName() == null) {
+            throw new WrongCategoryNameException("имя категории не должно быть пустым");
+        }
         category.setName(categoryDto.getName());
+
         return categoryRepository.save(category);
     }
 
     @Override
     public Category createCategory(Category category) {
+
+        Category categoryName = categoryRepository.getCategoryByName(category.getName());
+        if (categoryName != null) {
+
+            throw new WrongPatchException("уже существует категория с таким именем");
+        }
+
+
+
         return categoryRepository.save(category);
     }
 

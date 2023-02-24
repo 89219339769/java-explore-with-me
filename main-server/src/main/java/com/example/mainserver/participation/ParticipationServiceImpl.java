@@ -1,6 +1,7 @@
 package com.example.mainserver.participation;
 
 import com.example.mainserver.event.EventRepository;
+import com.example.mainserver.event.model.NewEventDto;
 import com.example.mainserver.exceptions.ParticipationNoFoundException;
 import com.example.mainserver.participation.model.Participation;
 import com.example.mainserver.participation.model.ParticipationChangeStatus;
@@ -58,6 +59,11 @@ public class ParticipationServiceImpl implements ParticipationService {
         }
         return ParticipationMapper.toParticipationDto(participationRepository.save(participation));
     }
+
+//    @Override
+//    public List<ParticipationDto> confirmParticipationRequest(Long userId, Long eventId, NewEventDto neweventDto) {
+//        return null;
+//    }
 
     @Override
     public List<ParticipationDto> confirmParticipationRequest(Long userId, Long eventId, ParticipationChangeStatus participationChangeStatus) {

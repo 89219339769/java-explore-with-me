@@ -43,5 +43,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             "and e.paid = ?2 " )
     List<Event> getEventsPublic(String text, Boolean paid, LocalDateTime rangeStart,
                                              LocalDateTime rangeEnd, Pageable pageable);
-
+    @Query("select e from Event e ")
+    List<Event> getEventWhithotQuerry(Pageable pageable);
 }

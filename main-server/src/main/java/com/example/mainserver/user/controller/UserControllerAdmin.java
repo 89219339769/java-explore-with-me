@@ -5,6 +5,7 @@ import com.example.mainserver.user.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 
@@ -18,7 +19,9 @@ public class UserControllerAdmin {
 
 
     @PostMapping
-    public User create(@RequestBody User user) {
+    public User create(@RequestBody User user,  HttpServletResponse response) {
+
+        response.setStatus(201);
         return userService.saveUser(user);
     }
 

@@ -42,7 +42,7 @@ public class EventControllerUser {
         if (startDate.isBefore(LocalDateTime.now())) {
             throw new WrongTimeEventCreationException("Field: eventDate. Error: должно содержать дату, которая еще не наступила. Value: " + startDate);
         }
-        response.setStatus(401);
+        response.setStatus(201);
         log.info("create event by user with id {}", userId);
         return eventService.createEvent(userId, neweventDto);
     }
@@ -50,20 +50,18 @@ public class EventControllerUser {
 
     @PatchMapping("/users/{userId}/events/{eventId}/requests")
     public List<ParticipationDto> confirmParticipationRequest(@PathVariable Long userId,
-                                                        @PathVariable Long eventId,
-                                                        @RequestBody ParticipationChangeStatus participationChangeStatus) {
+                                                              @PathVariable Long eventId,
+                                                              @RequestBody ParticipationChangeStatus participationChangeStatus) {
         log.info("confirm participation requests {} by owner {} of event with id {}", userId, eventId, participationChangeStatus);
-        return participationService.confirmParticipationRequest(eventId, userId, participationChangeStatus);
+        return participationService.confirmParticipationRequest(userId, eventId, participationChangeStatus);
+
+
     }
 
 
-
-
-
-
-
     @GetMapping("/users/{userId}/events")
-    public List<EventDtoShort> getEventsByUser(@PathVariable Long userId, @RequestParam int from, @RequestParam int size) {
+    public List<EventDtoShort> getEventsByUser(@PathVariable Long userId, @RequestParam(defaultValue = "0") int from,
+                                               @RequestParam(defaultValue = "10") int size) {
         log.info("get events  by owner ", userId);
         return eventService.getEventByUser(userId, from, size);
     }
@@ -75,13 +73,12 @@ public class EventControllerUser {
     }
 
 
-
-    @PatchMapping ("/users/{userId}/events/{eventId}")
-    public  List<ParticipationDto> patchEventByUser(@PathVariable Long userId, @PathVariable Long eventId, @RequestBody ParticipationChangeStatus participationChangeStatus) {
+    @PatchMapping("/users/{userId}/events/{eventId}")
+    public EventDto patchEventByUser(@PathVariable Long userId, @PathVariable Long eventId, @RequestBody EventDtoShort eventDtoShort) {
         log.info("putch events  by owner ", userId);
-        return participationService.confirmParticipationRequest(userId, eventId, participationChangeStatus);
+      //  return participationService.confirmParticipationRequest(userId, eventId, neweventDto);
+        return eventService.putchEvent(userId, eventId, eventDtoShort );
     }
-
 
 
 }

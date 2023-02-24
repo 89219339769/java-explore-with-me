@@ -105,6 +105,9 @@ public class EventServiceImpl implements EventService {
         if (updateEventAdminRequest.getTitle() != null)
             event.setTitle(updateEventAdminRequest.getTitle());
 
+        if (updateEventAdminRequest.getStateAction() != null)
+            event.setTitle(updateEventAdminRequest.getStateAction());
+
         event.setState(PUBLISHED);
         return EventMapper.toEventDto(eventRepository.save(event));
 
@@ -175,10 +178,14 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<EventDto> getEventsByAdmin(List<Long> users, List<String> states, List<Long> categories, String rangeStart, String rangeEnd, int from, int size) {
-        LocalDateTime start = LocalDateTime.parse(rangeStart, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        LocalDateTime end = LocalDateTime.parse(rangeEnd, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
         Pageable pageable = PageRequest.of(from, size, Sort.by(Sort.Direction.ASC, "id"));
-        List<Event> listEvent = eventRepository.getEventsByAdmin(start, end, pageable);
+
+        List<Event> listEvent = new ArrayList<>();
+        if (rangeStart != null && rangeEnd != null) {
+            LocalDateTime start = LocalDateTime.parse(rangeStart, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            LocalDateTime end = LocalDateTime.parse(rangeEnd, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            listEvent = eventRepository.getEventsByAdmin(start, end, pageable);
 
         List<Event> listEventSortUsers = new ArrayList<>();
         List<Event> listEventSortStates = new ArrayList<>();
@@ -225,11 +232,12 @@ public class EventServiceImpl implements EventService {
         }
         return listEventToListEventDto(listEvent);
     }
+        listEvent =  eventRepository.getEventWhithotQuerry(pageable);
+        return listEventToListEventDto(listEvent);
+    }
 
     @Override
     public List<EventDtoShort> getEventsPublic(String text, List<Long> categoryIds, Boolean paid, String rangeStart, String rangeEnd, String sort, int from, int size) {
-        LocalDateTime start = LocalDateTime.parse(rangeStart, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        LocalDateTime end = LocalDateTime.parse(rangeEnd, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         Pageable pageable = PageRequest.of(from, size, Sort.by(Sort.Direction.ASC, "id"));
 
         List<EventDtoShort> listEventToListEventDtoShort = new ArrayList<>();
@@ -237,6 +245,8 @@ public class EventServiceImpl implements EventService {
         if (sort != null) {
             List<Event> listEventDateSortIdCategory = new ArrayList<>();
             if (sort.equals("EVENT_DATE")) {
+                LocalDateTime start = LocalDateTime.parse(rangeStart, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                LocalDateTime end = LocalDateTime.parse(rangeEnd, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
                 List<Event> listEventDate = eventRepository.getEventsPublicSortDate(text, paid, start, end, pageable);
 
                 if (categoryIds != null) {
@@ -253,6 +263,8 @@ public class EventServiceImpl implements EventService {
 
             if (sort.equals("VIEWS")) {
                 List<Event> listEventViewsSortIdCategory = new ArrayList<>();
+                LocalDateTime start = LocalDateTime.parse(rangeStart, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                LocalDateTime end = LocalDateTime.parse(rangeEnd, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
                 List<Event> listEventViews = eventRepository.getEventsPublicSortDateViews(text, paid, start, end, pageable);
                 if (categoryIds != null) {
                     for (Long id : categoryIds) {
@@ -265,9 +277,17 @@ public class EventServiceImpl implements EventService {
                 return listEventToListEventDtoShort(listEventViews);
             }
         }
-        List<Event> list1 = new ArrayList<>();
-        list1 = eventRepository.getEventsPublic(text, paid, start, end, pageable);
-        return listEventToListEventDtoShort(list1);
+        if(rangeStart!=null && rangeEnd!=null) {
+            LocalDateTime start = LocalDateTime.parse(rangeStart, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            LocalDateTime end = LocalDateTime.parse(rangeEnd, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+            List<Event> list1 = new ArrayList<>();
+            list1 = eventRepository.getEventsPublic(text, paid, start, end, pageable);
+            return listEventToListEventDtoShort(list1);
+        }
+        List<Event> list2 = new ArrayList<>();
+        list2 = eventRepository.getEventWhithotQuerry(pageable);
+        return listEventToListEventDtoShort(list2);
 
     }
 

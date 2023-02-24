@@ -1,5 +1,6 @@
 package com.example.mainserver.participation;
 
+import com.example.mainserver.event.model.NewEventDto;
 import com.example.mainserver.participation.model.ParticipationChangeStatus;
 import com.example.mainserver.participation.model.ParticipationDto;
 import org.springframework.stereotype.Service;

@@ -19,6 +19,10 @@ public interface CompilationService {
 
     CompilationDtoShort getCompilation(Long compId);
 
+    void deleteCompilation(Long id);
+
+    CompilationDtoShort putch(Long compId, CompilationDto compilationDto);
+
 
 //    void deleteCompilation(Long id);
 //
