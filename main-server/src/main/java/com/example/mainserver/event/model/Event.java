@@ -61,4 +61,5 @@ public class Event {
 
     @Builder.Default
     private Long views = 0L;
+
 }

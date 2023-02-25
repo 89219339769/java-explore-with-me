@@ -32,6 +32,7 @@ public class NewEventDto {
 
     private Boolean requestModeration;
 
+    private String StateAction;
     @NotBlank
     private String title;
 }

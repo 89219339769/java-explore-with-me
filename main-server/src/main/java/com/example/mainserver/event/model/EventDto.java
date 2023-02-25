@@ -43,6 +43,8 @@ public class EventDto {
 
     private String title;
 
+    private String stateAction;
+
     private Integer confirmedRequests;
 
     private Long views;

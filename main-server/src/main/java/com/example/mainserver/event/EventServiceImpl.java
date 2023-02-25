@@ -105,15 +105,20 @@ public class EventServiceImpl implements EventService {
         if (updateEventAdminRequest.getTitle() != null)
             event.setTitle(updateEventAdminRequest.getTitle());
 
-        if (updateEventAdminRequest.getStateAction() != null)
-            event.setTitle(updateEventAdminRequest.getStateAction());
+
 
         if (event.getState() == PUBLISHED) {
             throw new WrongPatchException("событие уже опубликовано");
         }
         event.setState(PUBLISHED);
-        return EventMapper.toEventDto(eventRepository.save(event));
 
+
+        EventDto eventDto = EventMapper.toEventDto(eventRepository.save(event));
+
+        if(updateEventAdminRequest.getStateAction()!= null){
+            eventDto.setStateAction(updateEventAdminRequest.getStateAction());
+        }
+        return eventDto;
     }
 
     @Override

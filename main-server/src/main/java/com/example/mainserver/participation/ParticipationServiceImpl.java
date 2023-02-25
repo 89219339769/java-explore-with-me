@@ -1,7 +1,9 @@
 package com.example.mainserver.participation;
 
 import com.example.mainserver.event.EventRepository;
+import com.example.mainserver.event.model.Event;
 import com.example.mainserver.event.model.NewEventDto;
+import com.example.mainserver.exceptions.EventNotFoundException;
 import com.example.mainserver.exceptions.ParticipationNoFoundException;
 import com.example.mainserver.exceptions.WrongPatchException;
 import com.example.mainserver.participation.model.Participation;
@@ -90,18 +92,32 @@ public class ParticipationServiceImpl implements ParticipationService {
     }
 
     @Override
-    public ParticipationDto getParticipationRequest(Long userId, Long eventId) {
-        Participation participation = participationRepository.getParticipationRequest(userId, eventId);
-        return ParticipationMapper.toParticipationDto(participation);
+    public List<ParticipationDto> getParticipationRequesByInitiator(Long userId, Long eventId) {
 
+        List<Participation> part = participationRepository.findAllByRequesterId(52L);
+        List<ParticipationDto> partDto = new ArrayList<>();
+        for (Participation participation : part) {
+            partDto.add(ParticipationMapper.toParticipationDto(participation));
+        }
+        return partDto;
     }
 
     @Override
     public ParticipationDto cancelParticipationRequest(Long userId, Long reqId) {
         Participation participation = participationRepository.canselParticipationRequest(reqId, userId);
-               if(participation==null)
-                throw  new ParticipationNoFoundException("Request with id=" + reqId+" was not found");
+        if (participation == null)
+            throw new ParticipationNoFoundException("Request with id=" + reqId + " was not found");
         participation.setStatus(CANCELED);
         return ParticipationMapper.toParticipationDto(participationRepository.save(participation));
+    }
+
+    @Override
+    public List<ParticipationDto> getParticipationRequests(Long userId) {
+        List<Participation> list = participationRepository.findAllByRequesterId(userId);
+        List<ParticipationDto> listDto = new ArrayList<>();
+        for (Participation participation : list) {
+            listDto.add(ParticipationMapper.toParticipationDto(participation));
+        }
+        return listDto;
     }
 }

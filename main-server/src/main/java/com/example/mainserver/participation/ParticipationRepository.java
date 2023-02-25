@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ParticipationRepository  extends JpaRepository<Participation, Long> {
- //   List<Participation> findAllByRequesterId(Long userId);
+    List<Participation> findAllByRequesterId(Long userId);
 
     Participation findByEventIdAndRequesterId(Long eventId, Long userId);
 
@@ -19,7 +19,9 @@ public interface ParticipationRepository  extends JpaRepository<Participation, L
     List<Participation> getParticipations(Long eventId);
 
 
-
+    @Query("select p from Participation p  where p.event.id = ?2 " +
+            "order by p.created asc")
+    List<Participation> getParticipationRequestsByInitiator(Long eventId);
 
     @Query("select p from Participation p  where p.event.id = ?1 and p.requester.id = ?2 " +
             "order by p.created asc")

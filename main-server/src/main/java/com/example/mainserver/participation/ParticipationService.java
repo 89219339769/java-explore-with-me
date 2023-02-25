@@ -17,7 +17,9 @@ public interface ParticipationService {
 
    List<ParticipationDto> confirmParticipationRequest(Long userId, Long eventId, ParticipationChangeStatus participationChangeStatus);
 
-    ParticipationDto getParticipationRequest(Long userId, Long eventId);
+    List<ParticipationDto>  getParticipationRequesByInitiator(Long userId, Long eventId);
 
     ParticipationDto cancelParticipationRequest(Long userId, Long requestId);
+
+    List<ParticipationDto> getParticipationRequests(Long userId);
 }
