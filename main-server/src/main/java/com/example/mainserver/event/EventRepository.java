@@ -26,7 +26,9 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             "order by e.createdOn asc")
     List<Event> getEventsByAdmin(LocalDateTime rangeStart, LocalDateTime rangeEnd, Pageable pageable);
 
-    @Query("select e from Event e  where   e.eventDate > ?3 and e.eventDate < ?4 and upper(e.description) like upper(concat('%', ?1, '%'))" +
+    @Query("select e from Event e  where   e.eventDate > ?3 and e.eventDate < ?4 and  " +
+            "lower(e.description) like lower(concat('%', ?1 , '%'))" +
+            "OR lower(e.annotation) like lower(concat('%', ?1 , '%'))" +
             "and e.paid = ?2 " +
             "order by e.createdOn asc")
     List<Event> getEventsPublicSortDate(String text, Boolean paid, LocalDateTime rangeStart,
@@ -38,8 +40,9 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     List<Event> getEventsPublicSortDateViews(String text, Boolean paid, LocalDateTime rangeStart,
                                              LocalDateTime rangeEnd, Pageable pageable);
 
-    @Query("select e from Event e  where   e.eventDate > ?3 and e.eventDate < ?4 and upper(e.description) like upper(concat('%', ?1, '%'))" +
-            "and upper(e.annotation) like upper(concat('%', ?1, '%'))" +
+    @Query("select e from Event e  where   e.eventDate > ?3 and e.eventDate < ?4 and " +
+            "lower(e.description) like lower(concat('%', ?1 , '%')) " +
+            "OR lower(e.annotation) like lower(concat('%', ?1 , '%')) " +
             "and e.paid = ?2 " )
     List<Event> getEventsPublic(String text, Boolean paid, LocalDateTime rangeStart,
                                              LocalDateTime rangeEnd, Pageable pageable);

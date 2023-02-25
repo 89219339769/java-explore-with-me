@@ -108,7 +108,7 @@ public class EventServiceImpl implements EventService {
         if (updateEventAdminRequest.getStateAction() != null)
             event.setTitle(updateEventAdminRequest.getStateAction());
 
-        if(event.getState()==PUBLISHED){
+        if (event.getState() == PUBLISHED) {
             throw new WrongPatchException("событие уже опубликовано");
         }
         event.setState(PUBLISHED);
@@ -192,6 +192,9 @@ public class EventServiceImpl implements EventService {
 
         Pageable pageable = PageRequest.of(from, size, Sort.by(Sort.Direction.ASC, "id"));
 
+        User user = userRepository.findById(users.get(0))
+                .orElseThrow(() -> new RuntimeException("event with id =  not found"));
+
         List<Event> listEvent = new ArrayList<>();
         if (rangeStart != null && rangeEnd != null) {
             LocalDateTime start = LocalDateTime.parse(rangeStart, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
@@ -205,7 +208,7 @@ public class EventServiceImpl implements EventService {
             if (users != null && states == null && categories == null) {
                 for (Long userId : users) {
                     listEventSortUsers = listEvent.stream()
-                            .filter(eventId -> eventId.getInitiator().getId() == userId)
+                            .filter(eventId -> eventId.getInitiator().getId().equals(userId))
                             .collect(Collectors.toList());
                     return listEventToListEventDto(listEventSortUsers);
                 }
@@ -213,7 +216,7 @@ public class EventServiceImpl implements EventService {
             if (users != null && states != null && categories == null) {
                 for (Long userId : users) {
                     listEventSortUsers = listEvent.stream()
-                            .filter(eventId -> eventId.getInitiator().getId() == userId)
+                            .filter(eventId -> eventId.getInitiator().getId().equals(userId))
                             .collect(Collectors.toList());
                 }
                 for (String state : states) {
@@ -226,17 +229,20 @@ public class EventServiceImpl implements EventService {
             if (users != null && states != null && categories != null) {
                 for (Long userId : users) {
                     listEventSortUsers = listEvent.stream()
-                            .filter(eventId -> eventId.getInitiator().getId() == userId)
+                            .filter(eventId -> eventId.getInitiator().getId().equals(userId))
                             .collect(Collectors.toList());
+
+
+
                 }
                 for (String state : states) {
                     listEventSortStates = listEventSortUsers.stream()
-                            .filter(event -> event.getState().equals(state))
+                            .filter(event -> event.getState().equals(PUBLISHED))
                             .collect(Collectors.toList());
                 }
                 for (Long evetnCategory : categories) {
                     listEventSortCategories = listEventSortStates.stream()
-                            .filter(event -> event.getCategory().getId() == (evetnCategory))
+                            .filter(event -> event.getCategory().getId().equals(evetnCategory))
                             .collect(Collectors.toList());
                     return listEventToListEventDto(listEventSortCategories);
                 }
