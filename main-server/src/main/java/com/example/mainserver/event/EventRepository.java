@@ -45,4 +45,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
                                              LocalDateTime rangeEnd, Pageable pageable);
     @Query("select e from Event e ")
     List<Event> getEventWhithotQuerry(Pageable pageable);
+
+    @Query("select e from Event e where e.category.id =  ?1 ")
+    List<Event> findByCategoryId(Long id);
 }

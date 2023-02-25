@@ -5,6 +5,8 @@ import com.example.mainserver.participation.model.ParticipationDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+
 @Slf4j
 @RestController
 @RequestMapping
@@ -23,8 +25,10 @@ public class ParticipationControllerUser {
 
     @PostMapping("/users/{userId}/requests")
     public ParticipationDto createParticipationRequest(@PathVariable Long userId,
-                                                       @RequestParam Long eventId) {
+                                                       @RequestParam Long eventId,
+                                                       HttpServletResponse response) {
         log.info("create participation request by user {} to event {}", userId, eventId);
+        response.setStatus(201);
         return participationService.createParticipationRequest(userId, eventId);
     }
 
@@ -45,12 +49,12 @@ public class ParticipationControllerUser {
     }
 
 
-    @GetMapping("/users/{userId}/events/{eventId}/request")
-    public ParticipationDto getParticipationRequest(@PathVariable Long userId,
-                                                    @PathVariable Long eventId) {
-        log.info("get participation request by user {} to event {}", userId, eventId);
-        return participationService.getParticipationRequest(userId, eventId);
-    }
+//    @GetMapping("/users/{userId}/events/{eventId}/request")
+//    public ParticipationDto getParticipationRequest(@PathVariable Long userId,
+//                                                    @PathVariable Long eventId) {
+//        log.info("get participation request by user {} to event {}", userId, eventId);
+//        return participationService.getParticipationRequest(userId, eventId);
+//    }
 
 
 

@@ -3,6 +3,7 @@ package com.example.mainserver.participation;
 import com.example.mainserver.event.EventRepository;
 import com.example.mainserver.event.model.NewEventDto;
 import com.example.mainserver.exceptions.ParticipationNoFoundException;
+import com.example.mainserver.exceptions.WrongPatchException;
 import com.example.mainserver.participation.model.Participation;
 import com.example.mainserver.participation.model.ParticipationChangeStatus;
 import com.example.mainserver.participation.model.ParticipationDto;
@@ -30,7 +31,7 @@ public class ParticipationServiceImpl implements ParticipationService {
     @Override
     public ParticipationDto createParticipationRequest(Long userId, Long eventId) {
         if (participationRepository.findByEventIdAndRequesterId(eventId, userId) != null) {
-            throw new RuntimeException("participation request already exist");
+            throw new WrongPatchException("participation request already exist");
         }
 
         Participation participation = Participation
@@ -43,16 +44,16 @@ public class ParticipationServiceImpl implements ParticipationService {
                 .status(CONFIRMED)
                 .build();
         if (userId.equals(participation.getEvent().getInitiator().getId())) {
-            throw new RuntimeException("requester can`t be initiator of event");
+            throw new WrongPatchException("requester can`t be initiator of event");
         }
         if (!participation.getEvent().getState().equals(PUBLISHED)) {
-            throw new RuntimeException("event not published");
+            throw new WrongPatchException("event not published");
         }
 
         List<Participation> listPart = participationRepository.getParticipations(eventId);
 
         if (participation.getEvent().getParticipantLimit() <= listPart.size()) {
-            throw new RuntimeException("the limit of requests for participation has been exhausted");
+            throw new WrongPatchException("the limit of requests for participation has been exhausted");
         }
         if (Boolean.TRUE.equals(participation.getEvent().getRequestModeration())) {
             participation.setStatus(PENDING);
@@ -68,10 +69,10 @@ public class ParticipationServiceImpl implements ParticipationService {
     @Override
     public List<ParticipationDto> confirmParticipationRequest(Long userId, Long eventId, ParticipationChangeStatus participationChangeStatus) {
         List<ParticipationDto> participations = new ArrayList<>();
-        List<Long> participationIds = participationChangeStatus.getRequestIds();
+        List<Integer> participationIds = participationChangeStatus.getRequestIds();
 
-        for (Long participationId : participationIds) {
-            Participation participation = participationRepository.findById(participationId)
+        for (Integer participationId : participationIds) {
+            Participation participation = participationRepository.findById(Long.valueOf(participationId))
                     .orElseThrow(() -> new RuntimeException("event with id = " + eventId + " not found"));
             if (!participation.getStatus().equals(PENDING)) {
                 throw new RuntimeException("only participation request with status pending can be approval");
@@ -79,7 +80,7 @@ public class ParticipationServiceImpl implements ParticipationService {
 
             List<Participation> listPart = participationRepository.getParticipations(eventId);
             if (participation.getEvent().getParticipantLimit() <= listPart.size()) {
-                participation.setStatus(REJECTED);
+                throw new WrongPatchException("лимит участников исчерпан");
             } else {
                 participation.setStatus(participationChangeStatus.getStatus());
             }

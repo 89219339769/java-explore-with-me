@@ -37,7 +37,8 @@ public class UserControllerAdmin {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable Long id) {
+    public void deleteUser(@PathVariable Long id,  HttpServletResponse response) {
+        response.setStatus(204);
         userService.delete(id);
     }
 }

@@ -1,9 +1,8 @@
 package com.example.mainserver.event.controller;
 
 import com.example.mainserver.event.model.EventDtoShort;
-import com.example.mainserver.exceptions.EventNotFoundException;
 import com.example.mainserver.exceptions.WrongEventCreationException;
-import com.example.mainserver.exceptions.WrongTimeEventCreationException;
+import com.example.mainserver.exceptions.WrongPatchException;
 import com.example.mainserver.participation.ParticipationService;
 import com.example.mainserver.event.EventService;
 import com.example.mainserver.event.model.EventDto;
@@ -12,8 +11,6 @@ import com.example.mainserver.participation.model.ParticipationChangeStatus;
 import com.example.mainserver.participation.model.ParticipationDto;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -40,7 +37,7 @@ public class EventControllerUser {
         }
         LocalDateTime startDate = LocalDateTime.parse(neweventDto.getEventDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         if (startDate.isBefore(LocalDateTime.now())) {
-            throw new WrongTimeEventCreationException("Field: eventDate. Error: должно содержать дату, которая еще не наступила. Value: " + startDate);
+            throw new WrongPatchException("Field: eventDate. Error: должно содержать дату, которая еще не наступила. Value: " + startDate);
         }
         response.setStatus(201);
         log.info("create event by user with id {}", userId);

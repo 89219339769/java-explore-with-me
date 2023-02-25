@@ -7,7 +7,9 @@ import com.example.mainserver.exceptions.WrongCompilationCreation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.net.http.HttpResponse;
 
 @Slf4j
 @RestController
@@ -20,7 +22,9 @@ public class CompilationControllerAdmin {
     }
 
     @PostMapping
-    public CompilationDtoShort createCompilation(@Valid @RequestBody CompilationDto compilationDto) {
+    public CompilationDtoShort createCompilation(@Valid @RequestBody CompilationDto compilationDto,
+                                                 HttpServletResponse httpResponse) {
+        httpResponse.setStatus(201);
         log.info("create new compilation");
 
 
@@ -33,8 +37,9 @@ public class CompilationControllerAdmin {
     }
 
     @DeleteMapping("/{compId}")
-    public void deleteCompilation(@PathVariable Long compId) {
+    public void deleteCompilation(@PathVariable Long compId,  HttpServletResponse httpResponse) {
         log.info("delete compilation with id {}", compId);
+        httpResponse.setStatus(204);
         compilationService.deleteCompilation(compId);
     }
 

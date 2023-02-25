@@ -11,10 +11,10 @@ import java.util.List;
 
 public class ParticipationChangeStatus {
 
-    private List<Long> requestIds;
+    private List<Integer> requestIds;
     private final StatusRequest status;
 
-    public ParticipationChangeStatus(List<Long> requestIds, StatusRequest statusRequest) {
+    public ParticipationChangeStatus(List<Integer> requestIds, StatusRequest statusRequest) {
         this.requestIds = requestIds;
         this.status = statusRequest;
     }

@@ -4,11 +4,8 @@ import com.example.mainserver.category.model.Category;
 import com.example.mainserver.category.repository.CategoryRepository;
 import com.example.mainserver.compilation.model.Compilation;
 import com.example.mainserver.event.model.*;
-import com.example.mainserver.exceptions.CompilationNotFounfExeption;
-import com.example.mainserver.exceptions.EventNotFoundException;
+import com.example.mainserver.exceptions.*;
 
-import com.example.mainserver.exceptions.EventPublishedException;
-import com.example.mainserver.exceptions.WrongDateException;
 import com.example.mainserver.location.model.Location;
 import com.example.mainserver.location.LocationRepository;
 import com.example.mainserver.user.UserRepository;
@@ -84,6 +81,9 @@ public class EventServiceImpl implements EventService {
         }
         if (updateEventAdminRequest.getEventDate() != null) {
             LocalDateTime eventDate = LocalDateTime.parse(updateEventAdminRequest.getEventDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            if (eventDate.isBefore(LocalDateTime.now())) {
+                throw new WrongDatePatchException("ошибка во времени  старта события");
+            }
             event.setEventDate(eventDate);
         }
         if (updateEventAdminRequest.getLocation() != null) {
@@ -108,6 +108,9 @@ public class EventServiceImpl implements EventService {
         if (updateEventAdminRequest.getStateAction() != null)
             event.setTitle(updateEventAdminRequest.getStateAction());
 
+        if(event.getState()==PUBLISHED){
+            throw new WrongPatchException("событие уже опубликовано");
+        }
         event.setState(PUBLISHED);
         return EventMapper.toEventDto(eventRepository.save(event));
 
@@ -144,7 +147,7 @@ public class EventServiceImpl implements EventService {
         Event event = eventRepository.getEventByUser(userId, eventId);
 
         if (event.getState() == PUBLISHED)
-            throw new EventPublishedException("Event must  be published");
+            throw new WrongPatchException("Нельзя менять опубликованное событие");
         if (event == null)
             throw new EventNotFoundException("Event with id = " + eventId + " was not found");
         if (eventDtoShort.getAnnotation() != null) {
@@ -157,6 +160,12 @@ public class EventServiceImpl implements EventService {
 
         if (eventDtoShort.getEventDate() != null) {
             LocalDateTime startEvent = LocalDateTime.parse(eventDtoShort.getEventDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            if (startEvent.isBefore(LocalDateTime.now())) {
+                throw new WrongPatchException("ошибка во времени  старта события");
+
+
+            }
+
             event.setEventDate(startEvent);
         }
         if (eventDtoShort.getLocation() != null)
@@ -177,7 +186,9 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<EventDto> getEventsByAdmin(List<Long> users, List<String> states, List<Long> categories, String rangeStart, String rangeEnd, int from, int size) {
+    public List<EventDto> getEventsByAdmin
+            (List<Long> users, List<String> states, List<Long> categories, String rangeStart, String rangeEnd,
+             int from, int size) {
 
         Pageable pageable = PageRequest.of(from, size, Sort.by(Sort.Direction.ASC, "id"));
 
@@ -187,57 +198,58 @@ public class EventServiceImpl implements EventService {
             LocalDateTime end = LocalDateTime.parse(rangeEnd, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
             listEvent = eventRepository.getEventsByAdmin(start, end, pageable);
 
-        List<Event> listEventSortUsers = new ArrayList<>();
-        List<Event> listEventSortStates = new ArrayList<>();
-        List<Event> listEventSortCategories = new ArrayList<>();
+            List<Event> listEventSortUsers = new ArrayList<>();
+            List<Event> listEventSortStates = new ArrayList<>();
+            List<Event> listEventSortCategories = new ArrayList<>();
 
-        if (users != null && states == null && categories == null) {
-            for (Long userId : users) {
-                listEventSortUsers = listEvent.stream()
-                        .filter(eventId -> eventId.getInitiator().getId() == userId)
-                        .collect(Collectors.toList());
-                return listEventToListEventDto(listEventSortUsers);
+            if (users != null && states == null && categories == null) {
+                for (Long userId : users) {
+                    listEventSortUsers = listEvent.stream()
+                            .filter(eventId -> eventId.getInitiator().getId() == userId)
+                            .collect(Collectors.toList());
+                    return listEventToListEventDto(listEventSortUsers);
+                }
             }
+            if (users != null && states != null && categories == null) {
+                for (Long userId : users) {
+                    listEventSortUsers = listEvent.stream()
+                            .filter(eventId -> eventId.getInitiator().getId() == userId)
+                            .collect(Collectors.toList());
+                }
+                for (String state : states) {
+                    listEventSortStates = listEventSortUsers.stream()
+                            .filter(event -> event.getState().equals(state))
+                            .collect(Collectors.toList());
+                }
+                return listEventToListEventDto(listEventSortStates);
+            }
+            if (users != null && states != null && categories != null) {
+                for (Long userId : users) {
+                    listEventSortUsers = listEvent.stream()
+                            .filter(eventId -> eventId.getInitiator().getId() == userId)
+                            .collect(Collectors.toList());
+                }
+                for (String state : states) {
+                    listEventSortStates = listEventSortUsers.stream()
+                            .filter(event -> event.getState().equals(state))
+                            .collect(Collectors.toList());
+                }
+                for (Long evetnCategory : categories) {
+                    listEventSortCategories = listEventSortStates.stream()
+                            .filter(event -> event.getCategory().getId() == (evetnCategory))
+                            .collect(Collectors.toList());
+                    return listEventToListEventDto(listEventSortCategories);
+                }
+            }
+            return listEventToListEventDto(listEvent);
         }
-        if (users != null && states != null && categories == null) {
-            for (Long userId : users) {
-                listEventSortUsers = listEvent.stream()
-                        .filter(eventId -> eventId.getInitiator().getId() == userId)
-                        .collect(Collectors.toList());
-            }
-            for (String state : states) {
-                listEventSortStates = listEventSortUsers.stream()
-                        .filter(event -> event.getState().equals(state))
-                        .collect(Collectors.toList());
-            }
-            return listEventToListEventDto(listEventSortStates);
-        }
-        if (users != null && states != null && categories != null) {
-            for (Long userId : users) {
-                listEventSortUsers = listEvent.stream()
-                        .filter(eventId -> eventId.getInitiator().getId() == userId)
-                        .collect(Collectors.toList());
-            }
-            for (String state : states) {
-                listEventSortStates = listEventSortUsers.stream()
-                        .filter(event -> event.getState().equals(state))
-                        .collect(Collectors.toList());
-            }
-            for (Long evetnCategory : categories) {
-                listEventSortCategories = listEventSortStates.stream()
-                        .filter(event -> event.getCategory().getId() == (evetnCategory))
-                        .collect(Collectors.toList());
-                return listEventToListEventDto(listEventSortCategories);
-            }
-        }
-        return listEventToListEventDto(listEvent);
-    }
-        listEvent =  eventRepository.getEventWhithotQuerry(pageable);
+        listEvent = eventRepository.getEventWhithotQuerry(pageable);
         return listEventToListEventDto(listEvent);
     }
 
     @Override
-    public List<EventDtoShort> getEventsPublic(String text, List<Long> categoryIds, Boolean paid, String rangeStart, String rangeEnd, String sort, int from, int size) {
+    public List<EventDtoShort> getEventsPublic(String text, List<Long> categoryIds, Boolean paid, String
+            rangeStart, String rangeEnd, String sort, int from, int size) {
         Pageable pageable = PageRequest.of(from, size, Sort.by(Sort.Direction.ASC, "id"));
 
         List<EventDtoShort> listEventToListEventDtoShort = new ArrayList<>();
@@ -277,7 +289,7 @@ public class EventServiceImpl implements EventService {
                 return listEventToListEventDtoShort(listEventViews);
             }
         }
-        if(rangeStart!=null && rangeEnd!=null) {
+        if (rangeStart != null && rangeEnd != null) {
             LocalDateTime start = LocalDateTime.parse(rangeStart, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
             LocalDateTime end = LocalDateTime.parse(rangeEnd, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
@@ -294,7 +306,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventDto getEventPublic(Long id) {
 
-        Event event = eventRepository.findById( id)
+        Event event = eventRepository.findById(id)
                 .orElseThrow(() -> new EventNotFoundException("Event with id=" + id + " was not found"));
 
         Long views = event.getViews();

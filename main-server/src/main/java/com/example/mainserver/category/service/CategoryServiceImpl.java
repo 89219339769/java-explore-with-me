@@ -2,7 +2,10 @@ package com.example.mainserver.category.service;
 
 import com.example.mainserver.category.model.Category;
 import com.example.mainserver.category.repository.CategoryRepository;
+import com.example.mainserver.event.EventRepository;
+import com.example.mainserver.event.model.Event;
 import com.example.mainserver.exceptions.CategoryNotFounfExeption;
+import com.example.mainserver.exceptions.WrongCategoryDeleteException;
 import com.example.mainserver.exceptions.WrongCategoryNameException;
 import com.example.mainserver.exceptions.WrongPatchException;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +24,7 @@ import java.util.List;
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final EventRepository eventRepository;
 
     @Override
     public Category updateCategory(Category categoryDto, Long catId) {
@@ -51,7 +55,6 @@ public class CategoryServiceImpl implements CategoryService {
         }
 
 
-
         return categoryRepository.save(category);
     }
 
@@ -59,6 +62,14 @@ public class CategoryServiceImpl implements CategoryService {
     public void deleteCategory(Long id) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new CategoryNotFounfExeption("Category with id = " + id + " not found"));
+
+        List<Event> events = eventRepository.findByCategoryId(category.getId());
+        if (!events.isEmpty()) {
+
+            throw new WrongPatchException(" нельзя удалить категорию  связанную с событиями");
+        }
+
+
         categoryRepository.delete(category);
     }
 

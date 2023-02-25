@@ -72,12 +72,12 @@ public class ErrorHandler {
                 LocalDateTime.now());
     }
 
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse objectWrongEnterExeption(final WrongTimeEventCreationException e) {
-        return new ErrorResponse(e.getMessage(), "FORBIDDEN", "Incorrectly made request.",
-                LocalDateTime.now());
-    }
+//    @ExceptionHandler
+//    @ResponseStatus(HttpStatus.NOT_FOUND)
+//    public ErrorResponse objectWrongEnterExeption(final WrongTimeEventCreationException e) {
+//        return new ErrorResponse(e.getMessage(), "FORBIDDEN", "Incorrectly made request.",
+//                LocalDateTime.now());
+//    }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -127,6 +127,23 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus. CONFLICT)
     public ErrorResponse objectWrongEnterExeption(final WrongPatchException e) {
+        return new ErrorResponse(e.getMessage(), "BAD_REQUEST", "Incorrectly made request.",
+                LocalDateTime.now());
+    }
+
+
+
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus. CONFLICT)
+    public ErrorResponse objectWrongEnterExeption(final WrongCategoryDeleteException e) {
+        return new ErrorResponse(e.getMessage(), "BAD_REQUEST", "Incorrectly made request.",
+                LocalDateTime.now());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus. CONFLICT)
+    public ErrorResponse objectWrongEnterExeption(final WrongDatePatchException e) {
         return new ErrorResponse(e.getMessage(), "BAD_REQUEST", "Incorrectly made request.",
                 LocalDateTime.now());
     }
