@@ -49,14 +49,15 @@ public class ParticipationServiceImpl implements ParticipationService {
             throw new WrongPatchException("event not published");
         }
 
-        List<Participation> listPart = participationRepository.getParticipations(eventId);
-
-        if (participation.getEvent().getParticipantLimit() <= listPart.size()) {
+     //   List<Participation> listPart = participationRepository.getParticipations(eventId);
+int limit = participationRepository.countParticipationByEventIdAndStatus(eventId, PENDING);
+        if (participation.getEvent().getParticipantLimit() <= limit) {
             throw new WrongPatchException("the limit of requests for participation has been exhausted");
         }
         if (Boolean.TRUE.equals(participation.getEvent().getRequestModeration())) {
             participation.setStatus(PENDING);
         }
+
         return ParticipationMapper.toParticipationDto(participationRepository.save(participation));
     }
 

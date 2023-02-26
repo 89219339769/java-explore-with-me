@@ -2,6 +2,7 @@ package com.example.mainserver.participation;
 
 import com.example.mainserver.participation.model.Participation;
 import com.example.mainserver.participation.model.ParticipationDto;
+import com.example.mainserver.participation.model.StatusRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -34,6 +35,6 @@ public interface ParticipationRepository  extends JpaRepository<Participation, L
     List<Participation> findAllByEventId(Long eventId);
 
 
-
+    int countParticipationByEventIdAndStatus(Long eventId, StatusRequest status);
 
 }

@@ -23,8 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.example.mainserver.event.model.State.CANCELED;
-import static com.example.mainserver.event.model.State.PUBLISHED;
+import static com.example.mainserver.event.model.State.*;
 
 @Slf4j
 @Service
@@ -111,8 +110,14 @@ public class EventServiceImpl implements EventService {
         if (event.getState() == PUBLISHED) {
             throw new WrongPatchException("событие уже опубликовано");
         }
-        event.setState(PUBLISHED);
 
+        if(updateEventAdminRequest.getStateAction().equals("REJECT_EVENT")) {
+            event.setState(CANCELED);
+            EventDto eventDto = EventMapper.toEventDto(eventRepository.save(event));
+            return eventDto;
+        }
+        else
+        event.setState(PUBLISHED);
 
         EventDto eventDto = EventMapper.toEventDto(eventRepository.save(event));
 
@@ -152,10 +157,15 @@ public class EventServiceImpl implements EventService {
     public EventDto putchEvent(Long userId, Long eventId, EventDtoShort eventDtoShort) {
         Event event = eventRepository.getEventByUser(userId, eventId);
 
-        if (event.getState() != PUBLISHED)
-            throw new WrongPatchException("Нельзя менять опубликованное событие");
+       if (event.getState() == PUBLISHED)
+           throw new WrongPatchException("можно менять только события в статусе ожидания");
+
+/////////////////////////////////////
         if (event == null)
             throw new EventNotFoundException("Event with id = " + eventId + " was not found");
+
+       if(event.getEventDate().isBefore(LocalDateTime.now().plusHours(2)))
+           throw new WrongDateException("неверное время события");
         if (eventDtoShort.getAnnotation() != null) {
             event.setAnnotation(eventDtoShort.getAnnotation());
         }
@@ -188,7 +198,7 @@ public class EventServiceImpl implements EventService {
         if (eventDtoShort.getTitle() != null) {
             event.setTitle(eventDtoShort.getTitle());
         }
-        event.setState(CANCELED);
+        event.setState(PENDING);
         return EventMapper.toEventDto(eventRepository.save(event));
     }
 
