@@ -35,6 +35,8 @@ public class EventDtoShort {
     private boolean requestModeration;
     private String title;
 
+    private String stateAction;
+
     private Long views;
 
 

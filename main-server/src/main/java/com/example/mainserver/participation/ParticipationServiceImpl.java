@@ -48,15 +48,17 @@ public class ParticipationServiceImpl implements ParticipationService {
         if (!participation.getEvent().getState().equals(PUBLISHED)) {
             throw new WrongPatchException("event not published");
         }
+        if (Boolean.FALSE.equals(participation.getEvent().getRequestModeration())) {
+            participation.setStatus(CONFIRMED);
+        }
+        else  participation.setStatus(PENDING);
 
      //   List<Participation> listPart = participationRepository.getParticipations(eventId);
-int limit = participationRepository.countParticipationByEventIdAndStatus(eventId, PENDING);
+int limit = participationRepository.countParticipationByEventIdAndStatus(eventId, CONFIRMED);
         if (participation.getEvent().getParticipantLimit() <= limit) {
             throw new WrongPatchException("the limit of requests for participation has been exhausted");
         }
-        if (Boolean.TRUE.equals(participation.getEvent().getRequestModeration())) {
-            participation.setStatus(PENDING);
-        }
+
 
         return ParticipationMapper.toParticipationDto(participationRepository.save(participation));
     }
@@ -87,17 +89,22 @@ int limit = participationRepository.countParticipationByEventIdAndStatus(eventId
             if (participation.getStatus().equals(CONFIRMED)) {
 //                participation.setStatus(REJECTED);
 //                participationRepository.save(participation);
-                confirmedRequests.add(ParticipationMapper.toParticipationDto(participation));
-                //   throw new RuntimeException("only participation request with status pending can be approval");
+               // confirmedRequests.add(ParticipationMapper.toParticipationDto(participation));
+                   throw new WrongPatchException("only participation request with status pending can be approval");
             }
             if (participation.getStatus().equals(PENDING)) {
                 List<Participation> listPart = participationRepository.getParticipations(eventId);
-                if (participation.getEvent().getParticipantLimit() <= listPart.size()) {
+                if (participation.getEvent().getParticipantLimit() <= participationRepository.countParticipationByEventIdAndStatus(eventId, CONFIRMED)) {
                     participation.setStatus(REJECTED);
                     participationRepository.save(participation);
                     rejectedRequests.add(ParticipationMapper.toParticipationDto(participation));
-                    //    throw new WrongPatchException("лимит участников исчерпан");
-                } else {
+                    throw new WrongPatchException("лимит участников исчерпан");
+                }
+              //  if (){}
+
+
+
+                else {
                     participation.setStatus(participationChangeStatus.getStatus());
                     if (participation.getStatus().equals(REJECTED)) {
 //                participation.setStatus(REJECTED);
@@ -109,7 +116,10 @@ int limit = participationRepository.countParticipationByEventIdAndStatus(eventId
 //                participation.setStatus(REJECTED);
 //                participationRepository.save(participation);
                         participation.getEvent().setParticipantLimit(participation.getEvent().getParticipantLimit() - 1);
+                       StatusRequest statusRequest = participation.getStatus();
+                        participationRepository.save(participation);
                         confirmedRequests.add(ParticipationMapper.toParticipationDto(participation));
+
                         //   throw new RuntimeException("only participation request with status pending can be approval");
                     }
                 }

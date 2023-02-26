@@ -106,22 +106,21 @@ public class EventServiceImpl implements EventService {
             event.setTitle(updateEventAdminRequest.getTitle());
 
 
-
         if (event.getState() == PUBLISHED) {
             throw new WrongPatchException("событие уже опубликовано");
         }
 
-        if(updateEventAdminRequest.getStateAction().equals("REJECT_EVENT")) {
+        if (updateEventAdminRequest.getStateAction().equals("REJECT_EVENT")) {
             event.setState(CANCELED);
             EventDto eventDto = EventMapper.toEventDto(eventRepository.save(event));
-            return eventDto;
-        }
-        else
-        event.setState(PUBLISHED);
+            //  throw new WrongPatchException("отмененное событие нельзя публиковать");
+        } else if( event.getState() == CANCELED)
+            throw new WrongPatchException("отмененное событие нельзя публиковать");
+           else event.setState(PUBLISHED);
 
         EventDto eventDto = EventMapper.toEventDto(eventRepository.save(event));
 
-        if(updateEventAdminRequest.getStateAction()!= null){
+        if (updateEventAdminRequest.getStateAction() != null) {
             eventDto.setStateAction(updateEventAdminRequest.getStateAction());
         }
         return eventDto;
@@ -157,15 +156,15 @@ public class EventServiceImpl implements EventService {
     public EventDto putchEvent(Long userId, Long eventId, EventDtoShort eventDtoShort) {
         Event event = eventRepository.getEventByUser(userId, eventId);
 
-       if (event.getState() == PUBLISHED)
-           throw new WrongPatchException("можно менять только события в статусе ожидания");
+        if (event.getState() == PUBLISHED)
+            throw new WrongPatchException("можно менять только события в статусе ожидания");
 
 /////////////////////////////////////
         if (event == null)
             throw new EventNotFoundException("Event with id = " + eventId + " was not found");
 
-       if(event.getEventDate().isBefore(LocalDateTime.now().plusHours(2)))
-           throw new WrongDateException("неверное время события");
+        if (event.getEventDate().isBefore(LocalDateTime.now().plusHours(2)))
+            throw new WrongDateException("неверное время события");
         if (eventDtoShort.getAnnotation() != null) {
             event.setAnnotation(eventDtoShort.getAnnotation());
         }
@@ -198,7 +197,11 @@ public class EventServiceImpl implements EventService {
         if (eventDtoShort.getTitle() != null) {
             event.setTitle(eventDtoShort.getTitle());
         }
-        event.setState(PENDING);
+        if (eventDtoShort.getStateAction().equals("CANCEL_REVIEW")) {
+            event.setState(CANCELED);
+            return EventMapper.toEventDto(eventRepository.save(event));
+        } else
+            event.setState(PENDING);
         return EventMapper.toEventDto(eventRepository.save(event));
     }
 
@@ -248,7 +251,6 @@ public class EventServiceImpl implements EventService {
                     listEventSortUsers = listEvent.stream()
                             .filter(eventId -> eventId.getInitiator().getId().equals(userId))
                             .collect(Collectors.toList());
-
 
 
                 }
