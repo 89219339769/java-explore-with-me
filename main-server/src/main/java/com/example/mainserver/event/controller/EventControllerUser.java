@@ -52,9 +52,16 @@ public class EventControllerUser {
                                                                   @RequestBody ParticipationChangeStatus participationChangeStatus) {
         log.info("confirm participation requests {} by owner {} of event with id {}", userId, eventId, participationChangeStatus);
         return participationService.confirmParticipationRequest(userId, eventId, participationChangeStatus);
-
-
     }
+
+//        @PatchMapping("/users/{userId}/events/{eventId}")
+//        public ParticipationListDto putchevent(@PathVariable Long userId,
+//                @PathVariable Long eventId,
+//                @RequestBody ParticipationChangeStatus participationChangeStatus) {
+//            log.info("confirm participation requests {} by owner {} of event with id {}", userId, eventId, participationChangeStatus);
+//            return participationService.confirmParticipationRequest(userId, eventId, participationChangeStatus);
+//
+//    }
 
 
 

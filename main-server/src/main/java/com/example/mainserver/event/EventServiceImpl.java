@@ -152,7 +152,7 @@ public class EventServiceImpl implements EventService {
     public EventDto putchEvent(Long userId, Long eventId, EventDtoShort eventDtoShort) {
         Event event = eventRepository.getEventByUser(userId, eventId);
 
-        if (event.getState() == PUBLISHED)
+        if (event.getState() != PUBLISHED)
             throw new WrongPatchException("Нельзя менять опубликованное событие");
         if (event == null)
             throw new EventNotFoundException("Event with id = " + eventId + " was not found");
