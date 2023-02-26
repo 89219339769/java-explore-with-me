@@ -9,6 +9,7 @@ import com.example.mainserver.event.model.EventDto;
 import com.example.mainserver.event.model.NewEventDto;
 import com.example.mainserver.participation.model.ParticipationChangeStatus;
 import com.example.mainserver.participation.model.ParticipationDto;
+import com.example.mainserver.participation.model.ParticipationListDto;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -46,14 +47,31 @@ public class EventControllerUser {
 
 
     @PatchMapping("/users/{userId}/events/{eventId}/requests")
-    public List<ParticipationDto> confirmParticipationRequest(@PathVariable Long userId,
-                                                              @PathVariable Long eventId,
-                                                              @RequestBody ParticipationChangeStatus participationChangeStatus) {
+    public ParticipationListDto confirmParticipationRequest(@PathVariable Long userId,
+                                                                  @PathVariable Long eventId,
+                                                                  @RequestBody ParticipationChangeStatus participationChangeStatus) {
         log.info("confirm participation requests {} by owner {} of event with id {}", userId, eventId, participationChangeStatus);
         return participationService.confirmParticipationRequest(userId, eventId, participationChangeStatus);
 
 
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     @GetMapping("/users/{userId}/events")

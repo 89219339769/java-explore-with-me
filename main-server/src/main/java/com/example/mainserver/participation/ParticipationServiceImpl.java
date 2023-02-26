@@ -39,7 +39,7 @@ public class ParticipationServiceImpl implements ParticipationService {
                         .orElseThrow(() -> new RuntimeException("user with id = " + userId + " not found")))
                 .requester(userRepository.findById(userId)
                         .orElseThrow(() -> new RuntimeException("user with id = " + userId + " not found")))
-                .status(CONFIRMED)
+                .status(PENDING)
                 .build();
         if (userId.equals(participation.getEvent().getInitiator().getId())) {
             throw new WrongPatchException("requester can`t be initiator of event");
@@ -65,38 +65,88 @@ public class ParticipationServiceImpl implements ParticipationService {
 //    }
 
     @Override
-    public List<ParticipationDto> confirmParticipationRequest(Long userId, Long eventId, ParticipationChangeStatus participationChangeStatus) {
+    public ParticipationListDto confirmParticipationRequest(Long userId, Long eventId, ParticipationChangeStatus participationChangeStatus) {
         List<ParticipationDto> participations = new ArrayList<>();
         List<Integer> participationIds = participationChangeStatus.getRequestIds();
+        List<ParticipationDto> confirmedRequests = new ArrayList<>();
+        List<ParticipationDto> rejectedRequests = new ArrayList<>();
+
 
         for (Integer participationId : participationIds) {
+
             Participation participation = participationRepository.findById(Long.valueOf(participationId))
                     .orElseThrow(() -> new RuntimeException("event with id = " + eventId + " not found"));
-            if (!participation.getStatus().equals(PENDING)) {
-                throw new RuntimeException("only participation request with status pending can be approval");
+            if (!participation.getStatus().equals(REJECTED)) {
+//                participation.setStatus(REJECTED);
+//                participationRepository.save(participation);
+                rejectedRequests.add(ParticipationMapper.toParticipationDto(participation));
+             //   throw new RuntimeException("only participation request with status pending can be approval");
             }
-
+            if (participation.getStatus().equals(CONFIRMED)) {
+//                participation.setStatus(REJECTED);
+//                participationRepository.save(participation);
+                confirmedRequests.add(ParticipationMapper.toParticipationDto(participation));
+                //   throw new RuntimeException("only participation request with status pending can be approval");
+            }
             List<Participation> listPart = participationRepository.getParticipations(eventId);
-            if (participation.getEvent().getParticipantLimit() <= listPart.size()) {
-                throw new WrongPatchException("лимит участников исчерпан");
+            if (participation.getEvent().getParticipantLimit() <= listPart.size() ) {
+                participation.setStatus(REJECTED);
+                participationRepository.save(participation);
+                rejectedRequests.add(ParticipationMapper.toParticipationDto(participation));
+            //    throw new WrongPatchException("лимит участников исчерпан");
             } else {
-                participation.setStatus(participationChangeStatus.getStatus());
+                participation.setStatus(CONFIRMED);
+                participation.getEvent().setParticipantLimit(participation.getEvent().getParticipantLimit()-1);
+                confirmedRequests.add(ParticipationMapper.toParticipationDto(participation));
             }
-            participations.add(ParticipationMapper.toParticipationDto(participation));
         }
-        return participations;
+
+        ParticipationListDto participationListDto = new ParticipationListDto();
+        participationListDto.setConfirmedRequests(rejectedRequests);
+        participationListDto.setConfirmedRequests(confirmedRequests);
+        return participationListDto;
     }
 
-//    @Override
-//    public List<ParticipationDto> getParticipationRequesByInitiator(Long userId, Long eventId) {
-//
-//        List<Participation> part = participationRepository.findAllByRequesterId(userId);
-//        List<ParticipationDto> partDto = new ArrayList<>();
-//        for (Participation participation : part) {
-//            partDto.add(ParticipationMapper.toParticipationDto(participation));
-//        }
-//        return partDto;
-//    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     @Override
     public ParticipationDto cancelParticipationRequest(Long userId, Long reqId) {

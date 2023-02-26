@@ -69,13 +69,10 @@ public class ParticipationControllerUser {
 //    }
 
 
-
-
-
     @GetMapping("/users/{userId}/events/{eventId}/requests")
-    public ResponseEntity<List<ParticipationRequestDto>> getRequestsByEventIdAndInitiatorId(@PathVariable Long userId,
-                                                                                            @PathVariable Long eventId) {
-        return new ResponseEntity<>(participationService.getRequestsByEventIdAndInitiatorId(eventId, userId), HttpStatus.OK);
+    public List<ParticipationRequestDto> getRequestsByEventIdAndInitiatorId(@PathVariable Long userId,
+                                                                            @PathVariable Long eventId) {
+        return participationService.getRequestsByEventIdAndInitiatorId(eventId, userId);
     }
 
 
