@@ -31,4 +31,9 @@ public interface ParticipationRepository  extends JpaRepository<Participation, L
             "order by p.created asc")
     Participation canselParticipationRequest(Long reqId, Long userId);
 
+    List<Participation> findAllByEventId(Long eventId);
+
+
+
+
 }

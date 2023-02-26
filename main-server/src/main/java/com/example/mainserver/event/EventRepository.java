@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface EventRepository extends JpaRepository<Event, Long> {
 
@@ -51,4 +52,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     @Query("select e from Event e where e.category.id =  ?1 ")
     List<Event> findByCategoryId(Long id);
+
+
+    Optional<Event> findByIdAndInitiatorId(Long eventId, Long initiatorId);
 }

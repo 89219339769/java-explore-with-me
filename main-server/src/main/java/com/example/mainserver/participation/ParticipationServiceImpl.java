@@ -2,14 +2,9 @@ package com.example.mainserver.participation;
 
 import com.example.mainserver.event.EventRepository;
 import com.example.mainserver.event.model.Event;
-import com.example.mainserver.event.model.NewEventDto;
-import com.example.mainserver.exceptions.EventNotFoundException;
 import com.example.mainserver.exceptions.ParticipationNoFoundException;
 import com.example.mainserver.exceptions.WrongPatchException;
-import com.example.mainserver.participation.model.Participation;
-import com.example.mainserver.participation.model.ParticipationChangeStatus;
-import com.example.mainserver.participation.model.ParticipationDto;
-import com.example.mainserver.participation.model.ParticipationMapper;
+import com.example.mainserver.participation.model.*;
 import com.example.mainserver.user.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.mainserver.event.model.State.PUBLISHED;
+import static com.example.mainserver.participation.model.ParticipationMapper.toParticipationRequestDtoList;
 import static com.example.mainserver.participation.model.StatusRequest.*;
 
 @Service
@@ -91,16 +87,16 @@ public class ParticipationServiceImpl implements ParticipationService {
         return participations;
     }
 
-    @Override
-    public List<ParticipationDto> getParticipationRequesByInitiator(Long userId, Long eventId) {
-
-        List<Participation> part = participationRepository.findAllByRequesterId(52L);
-        List<ParticipationDto> partDto = new ArrayList<>();
-        for (Participation participation : part) {
-            partDto.add(ParticipationMapper.toParticipationDto(participation));
-        }
-        return partDto;
-    }
+//    @Override
+//    public List<ParticipationDto> getParticipationRequesByInitiator(Long userId, Long eventId) {
+//
+//        List<Participation> part = participationRepository.findAllByRequesterId(userId);
+//        List<ParticipationDto> partDto = new ArrayList<>();
+//        for (Participation participation : part) {
+//            partDto.add(ParticipationMapper.toParticipationDto(participation));
+//        }
+//        return partDto;
+//    }
 
     @Override
     public ParticipationDto cancelParticipationRequest(Long userId, Long reqId) {
@@ -120,4 +116,26 @@ public class ParticipationServiceImpl implements ParticipationService {
         }
         return listDto;
     }
+
+
+
+
+    @Override
+    public List<ParticipationRequestDto> getRequestsByEventIdAndInitiatorId(Long eventId, Long userId) {
+        getByIdAndInitiatorIdWithCheck(eventId, userId);
+        return toParticipationRequestDtoList(participationRepository.findAllByEventId(eventId));
+    }
+
+    private Event getByIdAndInitiatorIdWithCheck(Long eventId, Long initiatorId) {
+        return eventRepository.findByIdAndInitiatorId(eventId, initiatorId)
+                .orElseThrow(() -> new RuntimeException(String.format("Event with id=%d and initiatorId=%d was not found", eventId, initiatorId)));
+    }
+
+
+
+
+
+
+
+
 }

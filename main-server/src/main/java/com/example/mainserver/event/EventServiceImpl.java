@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.example.mainserver.event.model.State.CANCELED;
 import static com.example.mainserver.event.model.State.PUBLISHED;
 
 @Slf4j
@@ -187,7 +188,8 @@ public class EventServiceImpl implements EventService {
         if (eventDtoShort.getTitle() != null) {
             event.setTitle(eventDtoShort.getTitle());
         }
-        return EventMapper.toEventDto(event);
+        event.setState(CANCELED);
+        return EventMapper.toEventDto(eventRepository.save(event));
     }
 
     @Override
