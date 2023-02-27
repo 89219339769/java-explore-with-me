@@ -1,7 +1,5 @@
 package com.example.mainserver.user.model;
 
-import com.example.mainserver.event.model.Event;
-import com.example.mainserver.event.model.EventDto;
 
 public class UserMapping {
 

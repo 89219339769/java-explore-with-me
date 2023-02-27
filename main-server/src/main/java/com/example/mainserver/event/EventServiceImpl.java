@@ -192,12 +192,10 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<EventDto> getEventsByAdmin
-            (List<Long> users, List<String> states, List<Long> categories, String rangeStart, String rangeEnd,
-             int from, int size) {
+    public List<EventDto> getEventsByAdmin(List<Long> users, List<String> states, List<Long> categories, String rangeStart, String rangeEnd,
+                                           int from, int size) {
 
         Pageable pageable = PageRequest.of(from, size, Sort.by(Sort.Direction.ASC, "id"));
-
         User user = userRepository.findById(users.get(0))
                 .orElseThrow(() -> new RuntimeException("event with id =  not found"));
 

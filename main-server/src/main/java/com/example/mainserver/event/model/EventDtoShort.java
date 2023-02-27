@@ -27,7 +27,7 @@ public class EventDtoShort {
 
     private UserDto initiator;
 
-    private int ParticipantLimit;
+    private int participantLimit;
     private Boolean paid;
 
     private boolean requestModeration;

@@ -11,6 +11,7 @@ public class ParticipationMapper {
 
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
     public static ParticipationDto toParticipationDto(Participation participation) {
         return ParticipationDto
                 .builder()
@@ -31,7 +32,6 @@ public class ParticipationMapper {
                 .status(participationDto.getStatus())
                 .build();
     }
-
 
 
 //    public static Request toRequest(Event event, User requester) {
@@ -61,12 +61,6 @@ public class ParticipationMapper {
     public static String toStringDateTime(LocalDateTime dateTime) {
         return dateTime.format(FORMATTER);
     }
-
-
-
-
-
-
 
 
 }

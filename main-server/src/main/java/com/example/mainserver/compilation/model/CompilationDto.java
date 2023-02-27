@@ -1,6 +1,5 @@
 package com.example.mainserver.compilation.model;
 
-import com.example.mainserver.event.model.EventDto;
 import lombok.*;
 
 import java.util.List;

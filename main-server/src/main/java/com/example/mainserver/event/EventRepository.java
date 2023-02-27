@@ -1,7 +1,6 @@
 package com.example.mainserver.event;
 
 import com.example.mainserver.event.model.Event;
-import com.example.mainserver.participation.model.Participation;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

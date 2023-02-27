@@ -1,7 +1,5 @@
 package com.example.mainserver.compilation.model;
 
-
-import com.example.mainserver.event.model.EventDto;
 import com.example.mainserver.event.model.EventDtoShort;
 import lombok.*;
 
