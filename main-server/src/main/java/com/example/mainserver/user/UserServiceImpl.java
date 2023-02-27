@@ -34,7 +34,6 @@ public class UserServiceImpl implements UserService {
             throw new WrongPatchException("уже существует юзер с таким именем");
         }
 
-
         repository.save(user);
         return user;
     }
