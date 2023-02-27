@@ -3,7 +3,6 @@ package com.example.statserver.service;
 import com.example.statserver.model.EndpointHit;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
 import java.util.List;
