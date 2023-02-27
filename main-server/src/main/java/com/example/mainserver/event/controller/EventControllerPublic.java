@@ -34,24 +34,18 @@ public class EventControllerPublic {
                                          @RequestParam(required = false) String sort,
                                          @RequestParam(defaultValue = "0") int from,
                                          @RequestParam(defaultValue = "10") int size,
-                                         HttpServletRequest  request) {
+                                         HttpServletRequest request) {
         log.info("get events by param: text = {}, categoryIds = {}, paid = {}, rangeStart = {}, rangeEnd = {}, " +
                         "onlyAvailable = {}, sort = {}, from = {}, size = {}", text, categoryIds, paid, rangeStart, rangeEnd,
                 sort, from, size);
 
-
-//        List<EventDtoShort>events = eventService.getEventsPublic(text, categoryIds, paid, rangeStart, rangeEnd, sort, from, size);
-//        for (EventDtoShort eventDeventstoShort:events){
-//            EndpointHit endpointHit = EndpointHit.builder()
-//                    .app("main-server")
-//                    .uri(request.getRequestURI())
-//                    .ip(request.getRemoteAddr())
-//                    .timestamp(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
-//                    .build();
-//            eventClient.createHit(endpointHit);
-//
-//        }
-
+        EndpointHit endpointHit = EndpointHit.builder()
+                .app("main-server")
+                .uri(request.getRequestURI())
+                .ip(request.getRemoteAddr())
+                .timestamp(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                .build();
+        eventClient.createHit(endpointHit);
         return eventService.getEventsPublic(text, categoryIds, paid, rangeStart, rangeEnd, sort, from, size);
     }
 
@@ -67,8 +61,6 @@ public class EventControllerPublic {
                 .timestamp(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .build();
 
-
-        //сюда нужно тело передать EndpointHit
         eventClient.createHit(endpointHit);
         return eventService.getEventPublic(id);
     }
