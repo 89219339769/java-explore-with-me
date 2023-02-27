@@ -3,11 +3,24 @@
 version: '3.8'
 
 services:
+
+
   ewm-service:
-    build: main-server
+    build:
+      context: ewm
+      dockerfile: Dockerfile
     container_name: ewm-service
     ports:
       - "8080:8080"
+    depends_on:
+      - ewm-db
+    environment:
+      - STATS_SERVER_URL=http://stats-server:9090
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/ewm
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+
+
+
 
   ewm-db:
     container_name: ewm_db
@@ -17,7 +30,7 @@ services:
     environment:
         - POSTGRES_DB=ewm
         - POSTGRES_USER=postgres
-        - POSTGRES_PASSWORD=postgres
+        - POSTGRES_PASSWORD=iamroot
 
 
 
