@@ -225,7 +225,7 @@ public class EventServiceImpl implements EventService {
                 }
                 for (String state : states) {
                     listEventSortStates = listEventSortUsers.stream()
-                            .filter(event -> event.getState().equals(state))
+                            .filter(event -> false)
                             .collect(Collectors.toList());
                 }
                 return listEventToListEventDto(listEventSortStates);
@@ -261,8 +261,6 @@ public class EventServiceImpl implements EventService {
             rangeStart, String rangeEnd, String sort, int from, int size) {
         Pageable pageable = PageRequest.of(from, size, Sort.by(Sort.Direction.ASC, "id"));
 
-        List<EventDtoShort> listEventToListEventDtoShort = new ArrayList<>();
-
         if (sort != null) {
             List<Event> listEventDateSortIdCategory = new ArrayList<>();
             if (sort.equals("EVENT_DATE")) {
@@ -273,7 +271,7 @@ public class EventServiceImpl implements EventService {
                 if (categoryIds != null) {
                     for (Long id : categoryIds) {
                         listEventDateSortIdCategory = listEventDate.stream()
-                                .filter(event -> event.getCategory().getId() == id)
+                                .filter(event -> event.getCategory().getId().equals(id))
                                 .collect(Collectors.toList());
                     }
                     return listEventToListEventDtoShort(listEventDateSortIdCategory);
@@ -283,14 +281,13 @@ public class EventServiceImpl implements EventService {
             }
 
             if (sort.equals("VIEWS")) {
-                List<Event> listEventViewsSortIdCategory = new ArrayList<>();
                 LocalDateTime start = LocalDateTime.parse(rangeStart, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
                 LocalDateTime end = LocalDateTime.parse(rangeEnd, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
                 List<Event> listEventViews = eventRepository.getEventsPublicSortDateViews(text, paid, start, end, pageable);
                 if (categoryIds != null) {
                     for (Long id : categoryIds) {
                         listEventDateSortIdCategory = listEventViews.stream()
-                                .filter(event -> event.getCategory().getId() == id)
+                                .filter(event -> event.getCategory().getId().equals(id))
                                 .collect(Collectors.toList());
                     }
                     return listEventToListEventDtoShort(listEventDateSortIdCategory);

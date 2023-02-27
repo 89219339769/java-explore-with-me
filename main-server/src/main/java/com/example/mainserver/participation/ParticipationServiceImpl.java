@@ -62,7 +62,6 @@ public class ParticipationServiceImpl implements ParticipationService {
 
     @Override
     public ParticipationListDto confirmParticipationRequest(Long userId, Long eventId, ParticipationChangeStatus participationChangeStatus) {
-        List<ParticipationDto> participations = new ArrayList<>();
         List<Integer> participationIds = participationChangeStatus.getRequestIds();
         List<ParticipationDto> confirmedRequests = new ArrayList<>();
         List<ParticipationDto> rejectedRequests = new ArrayList<>();
