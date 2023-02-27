@@ -4,8 +4,6 @@ import com.example.mainserver.participation.ParticipationServiceImpl;
 import com.example.mainserver.participation.model.ParticipationDto;
 import com.example.mainserver.participation.model.ParticipationRequestDto;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -53,27 +51,9 @@ public class ParticipationControllerUser {
     }
 
 
-//    @GetMapping("/users/{userId}/events/{eventId}/requests")
-//    public ParticipationDto getParticipationRequestbyInitiator(@PathVariable Long userId,
-//                                                               @PathVariable Long eventId) {
-//        log.info("get participation request by user {} to event {}", userId, eventId);
-//        return participationService.getParticipationRequest(userId, eventId);
-//    }
-
-
-//    @GetMapping("/users/{userId}/events/{eventId}/requests")
-//    public List<ParticipationDto> getRequestsByEventIdAndInitiatorId(@PathVariable Long userId,
-//                                                               @PathVariable Long eventId) {
-//        log.info("get participation request by user {} to event {}", userId, eventId);
-//        return participationService.getParticipationRequesByInitiator(userId, eventId);
-//    }
-
-
     @GetMapping("/users/{userId}/events/{eventId}/requests")
     public List<ParticipationRequestDto> getRequestsByEventIdAndInitiatorId(@PathVariable Long userId,
                                                                             @PathVariable Long eventId) {
         return participationService.getRequestsByEventIdAndInitiatorId(eventId, userId);
     }
-
-
 }

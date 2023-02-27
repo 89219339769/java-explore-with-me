@@ -7,7 +7,6 @@ import com.example.mainserver.compilation.model.CompilationMapper;
 import com.example.mainserver.event.EventRepository;
 import com.example.mainserver.event.model.Event;
 import com.example.mainserver.exceptions.CompilationNotFounfExeption;
-import com.example.mainserver.exceptions.EventNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -78,28 +77,24 @@ public class CompilationServiceImpl implements CompilationService {
         Compilation compilation = compilationRepository.findById(compId)
                 .orElseThrow(() -> new CompilationNotFounfExeption("compilation with id = " + compId + " not found"));
 
-        List<Event>events = new ArrayList<>();
-        for (Long compilId:compilationDto.getEvents()){
+        List<Event> events = new ArrayList<>();
+        for (Long compilId : compilationDto.getEvents()) {
             events.add(eventRepository.findById(compilId)
                     .orElseThrow(() -> new CompilationNotFounfExeption("compilation with id = " + compilId + " not found")));
         }
 
-        if(compilationDto.getEvents()!=null){
+        if (compilationDto.getEvents() != null) {
             compilation.setEvents(events);
         }
-        if(compilationDto.getPinned()!=null){
+        if (compilationDto.getPinned() != null) {
             compilation.setPinned(compilationDto.getPinned());
         }
-        if(compilationDto.getTitle()!=null)
+        if (compilationDto.getTitle() != null)
             compilation.setTitle(compilationDto.getTitle());
         compilationRepository.save(compilation);
         CompilationDtoShort compilationDtoShort = compilationMapper.toCompilationDtoShort(compilation);
         return compilationDtoShort;
     }
-
-
-
-
 
 
     private List<CompilationDtoShort> getCompilationWithOutPinned(int from, int size, Pageable pageable) {

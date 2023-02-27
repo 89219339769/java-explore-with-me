@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.mainserver.event.model.EventMapper.DATE_TIME_FORMATTER;
 import static com.example.mainserver.event.model.State.PUBLISHED;
 import static com.example.mainserver.participation.model.ParticipationMapper.toParticipationRequestDtoList;
 import static com.example.mainserver.participation.model.StatusRequest.*;
@@ -50,11 +49,9 @@ public class ParticipationServiceImpl implements ParticipationService {
         }
         if (Boolean.FALSE.equals(participation.getEvent().getRequestModeration())) {
             participation.setStatus(CONFIRMED);
-        }
-        else  participation.setStatus(PENDING);
+        } else participation.setStatus(PENDING);
 
-     //   List<Participation> listPart = participationRepository.getParticipations(eventId);
-int limit = participationRepository.countParticipationByEventIdAndStatus(eventId, CONFIRMED);
+        int limit = participationRepository.countParticipationByEventIdAndStatus(eventId, CONFIRMED);
         if (participation.getEvent().getParticipantLimit() <= limit) {
             throw new WrongPatchException("the limit of requests for participation has been exhausted");
         }
@@ -62,11 +59,6 @@ int limit = participationRepository.countParticipationByEventIdAndStatus(eventId
 
         return ParticipationMapper.toParticipationDto(participationRepository.save(participation));
     }
-
-//    @Override
-//    public List<ParticipationDto> confirmParticipationRequest(Long userId, Long eventId, NewEventDto neweventDto) {
-//        return null;
-//    }
 
     @Override
     public ParticipationListDto confirmParticipationRequest(Long userId, Long eventId, ParticipationChangeStatus participationChangeStatus) {
@@ -81,16 +73,10 @@ int limit = participationRepository.countParticipationByEventIdAndStatus(eventId
             Participation participation = participationRepository.findById(Long.valueOf(participationId))
                     .orElseThrow(() -> new RuntimeException("event with id = " + eventId + " not found"));
             if (participation.getStatus().equals(REJECTED)) {
-//                participation.setStatus(REJECTED);
-//                participationRepository.save(participation);
                 rejectedRequests.add(ParticipationMapper.toParticipationDto(participation));
-                //   throw new RuntimeException("only participation request with status pending can be approval");
             }
             if (participation.getStatus().equals(CONFIRMED)) {
-//                participation.setStatus(REJECTED);
-//                participationRepository.save(participation);
-               // confirmedRequests.add(ParticipationMapper.toParticipationDto(participation));
-                   throw new WrongPatchException("only participation request with status pending can be approval");
+                throw new WrongPatchException("only participation request with status pending can be approval");
             }
             if (participation.getStatus().equals(PENDING)) {
                 List<Participation> listPart = participationRepository.getParticipations(eventId);
@@ -99,28 +85,17 @@ int limit = participationRepository.countParticipationByEventIdAndStatus(eventId
                     participationRepository.save(participation);
                     rejectedRequests.add(ParticipationMapper.toParticipationDto(participation));
                     throw new WrongPatchException("лимит участников исчерпан");
-                }
-              //  if (){}
-
-
-
-                else {
+                } else {
                     participation.setStatus(participationChangeStatus.getStatus());
                     if (participation.getStatus().equals(REJECTED)) {
-//                participation.setStatus(REJECTED);
-//                participationRepository.save(participation);
                         rejectedRequests.add(ParticipationMapper.toParticipationDto(participation));
-                        //   throw new RuntimeException("only participation request with status pending can be approval");
+
                     }
                     if (participation.getStatus().equals(CONFIRMED)) {
-//                participation.setStatus(REJECTED);
-//                participationRepository.save(participation);
                         participation.getEvent().setParticipantLimit(participation.getEvent().getParticipantLimit() - 1);
-                       StatusRequest statusRequest = participation.getStatus();
+                        StatusRequest statusRequest = participation.getStatus();
                         participationRepository.save(participation);
                         confirmedRequests.add(ParticipationMapper.toParticipationDto(participation));
-
-                        //   throw new RuntimeException("only participation request with status pending can be approval");
                     }
                 }
             }
@@ -167,6 +142,4 @@ int limit = participationRepository.countParticipationByEventIdAndStatus(eventId
         return eventRepository.findByIdAndInitiatorId(eventId, initiatorId)
                 .orElseThrow(() -> new RuntimeException(String.format("Event with id=%d and initiatorId=%d was not found", eventId, initiatorId)));
     }
-
-
 }

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.net.http.HttpResponse;
+
 
 @Slf4j
 @RestController
@@ -28,8 +28,7 @@ public class CompilationControllerAdmin {
         log.info("create new compilation");
 
 
-
-        if(compilationDto.getTitle()==null){
+        if (compilationDto.getTitle() == null) {
             throw new WrongCompilationCreation("Field: title. Error: must not be blank. Value: null");
         }
         CompilationDtoShort compilationDtoShort = compilationService.createCompilation(compilationDto);
@@ -37,7 +36,7 @@ public class CompilationControllerAdmin {
     }
 
     @DeleteMapping("/{compId}")
-    public void deleteCompilation(@PathVariable Long compId,  HttpServletResponse httpResponse) {
+    public void deleteCompilation(@PathVariable Long compId, HttpServletResponse httpResponse) {
         log.info("delete compilation with id {}", compId);
         httpResponse.setStatus(204);
         compilationService.deleteCompilation(compId);
@@ -47,7 +46,7 @@ public class CompilationControllerAdmin {
     @PatchMapping("/{compId}")
     public CompilationDtoShort patchCompilation(@PathVariable Long compId, @Valid @RequestBody CompilationDto compilationDto) {
         log.info("patch compilation with id {}", compId);
-      return   compilationService.putch(compId, compilationDto);
+        return compilationService.putch(compId, compilationDto);
     }
 
 //

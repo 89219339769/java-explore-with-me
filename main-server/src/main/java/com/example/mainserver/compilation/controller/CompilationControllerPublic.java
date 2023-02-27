@@ -1,12 +1,9 @@
 package com.example.mainserver.compilation.controller;
 
 import com.example.mainserver.compilation.CompilationService;
-import com.example.mainserver.compilation.model.CompilationDto;
 import com.example.mainserver.compilation.model.CompilationDtoShort;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,13 +21,13 @@ public class CompilationControllerPublic {
 
 
     @GetMapping
-    public List<CompilationDtoShort> getCompilations(@RequestParam (required = false) Boolean pinned,
-                                                         @RequestParam (defaultValue = "0") int from,
-                                                         @RequestParam (defaultValue = "10") int size,
-                                                         Pageable pageable) {
+    public List<CompilationDtoShort> getCompilations(@RequestParam(required = false) Boolean pinned,
+                                                     @RequestParam(defaultValue = "0") int from,
+                                                     @RequestParam(defaultValue = "10") int size,
+                                                     Pageable pageable) {
         log.info("get compilations with param: pinned = {}, from = {}, size = {}", pinned, from, size);
 
-       return  compilationService.getCompilations(pinned, from, size, pageable);
+        return compilationService.getCompilations(pinned, from, size, pageable);
 
     }
 
@@ -39,7 +36,7 @@ public class CompilationControllerPublic {
     public CompilationDtoShort getCompilation(@PathVariable Long compId) {
         log.info("get compilation with id" + compId);
 
-        return  compilationService.getCompilation(compId);
+        return compilationService.getCompilation(compId);
 
     }
 }

@@ -8,11 +8,6 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 
-import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Map;
 
 @Service
 public class EventClient extends BaseClient {
@@ -28,27 +23,9 @@ public class EventClient extends BaseClient {
         );
     }
 
-//    public void createHit(EndpointHit endpointHit) {
-//
-//
-//    }
 
     public ResponseEntity<Object> createHit(EndpointHit endpointHit) {
 
         return post("", endpointHit);
     }
-
-
-
-
-//    public ResponseEntity<Object> getStats(LocalDateTime start, LocalDateTime end,
-//                                           List<String> uris, Boolean unique) {
-//        Map<String, Object> parameters = Map.of(
-//                "start", start.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
-//                "end", end.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
-//                "uris", uris.get(0),
-//                "unique", unique
-//        );
-//        return get("/stats?start={start}&end={end}&uris={uris}&unique={unique}", parameters);
-//    }
 }

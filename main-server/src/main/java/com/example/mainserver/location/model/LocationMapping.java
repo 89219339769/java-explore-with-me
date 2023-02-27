@@ -1,7 +1,5 @@
 package com.example.mainserver.location.model;
 
-import com.example.mainserver.user.model.User;
-import com.example.mainserver.user.model.UserDto;
 
 public class LocationMapping {
     public static LocationDto toLocationDto(Location location) {
@@ -11,6 +9,4 @@ public class LocationMapping {
                 .lon(location.getLon())
                 .build();
     }
-
-
 }

@@ -5,7 +5,6 @@ import com.example.mainserver.category.repository.CategoryRepository;
 import com.example.mainserver.event.EventRepository;
 import com.example.mainserver.event.model.Event;
 import com.example.mainserver.exceptions.CategoryNotFounfExeption;
-import com.example.mainserver.exceptions.WrongCategoryDeleteException;
 import com.example.mainserver.exceptions.WrongCategoryNameException;
 import com.example.mainserver.exceptions.WrongPatchException;
 import lombok.RequiredArgsConstructor;

@@ -2,11 +2,9 @@ package com.example.mainserver.event.model;
 
 import com.example.mainserver.category.model.Category;
 import com.example.mainserver.location.model.Location;
-import com.example.mainserver.location.model.LocationDto;
 import com.example.mainserver.user.model.UserDto;
 import lombok.*;
 
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -29,7 +27,7 @@ public class EventDtoShort {
 
     private UserDto initiator;
 
-    private  int ParticipantLimit;
+    private int ParticipantLimit;
     private Boolean paid;
 
     private boolean requestModeration;

@@ -1,6 +1,4 @@
 package com.example.mainserver.event.model;
-
-import com.example.mainserver.location.model.Location;
 import com.example.mainserver.location.model.LocationDto;
 import lombok.*;
 

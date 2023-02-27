@@ -8,7 +8,6 @@ import com.example.mainserver.event.EventService;
 import com.example.mainserver.event.model.EventDto;
 import com.example.mainserver.event.model.NewEventDto;
 import com.example.mainserver.participation.model.ParticipationChangeStatus;
-import com.example.mainserver.participation.model.ParticipationDto;
 import com.example.mainserver.participation.model.ParticipationListDto;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,38 +47,11 @@ public class EventControllerUser {
 
     @PatchMapping("/users/{userId}/events/{eventId}/requests")
     public ParticipationListDto confirmParticipationRequest(@PathVariable Long userId,
-                                                                  @PathVariable Long eventId,
-                                                                  @RequestBody ParticipationChangeStatus participationChangeStatus) {
+                                                            @PathVariable Long eventId,
+                                                            @RequestBody ParticipationChangeStatus participationChangeStatus) {
         log.info("confirm participation requests {} by owner {} of event with id {}", userId, eventId, participationChangeStatus);
         return participationService.confirmParticipationRequest(userId, eventId, participationChangeStatus);
     }
-
-//        @PatchMapping("/users/{userId}/events/{eventId}")
-//        public ParticipationListDto putchevent(@PathVariable Long userId,
-//                @PathVariable Long eventId,
-//                @RequestBody ParticipationChangeStatus participationChangeStatus) {
-//            log.info("confirm participation requests {} by owner {} of event with id {}", userId, eventId, participationChangeStatus);
-//            return participationService.confirmParticipationRequest(userId, eventId, participationChangeStatus);
-//
-//    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     @GetMapping("/users/{userId}/events")
     public List<EventDtoShort> getEventsByUser(@PathVariable Long userId, @RequestParam(defaultValue = "0") int from,
@@ -98,39 +70,7 @@ public class EventControllerUser {
     @PatchMapping("/users/{userId}/events/{eventId}")
     public EventDto patchEventByUser(@PathVariable Long userId, @PathVariable Long eventId, @RequestBody EventDtoShort eventDtoShort) {
         log.info("putch events  by owner ", userId);
-      //  return participationService.confirmParticipationRequest(userId, eventId, neweventDto);
-        return eventService.putchEvent(userId, eventId, eventDtoShort );
+        return eventService.putchEvent(userId, eventId, eventDtoShort);
     }
-
-
 }
 
-//    @PatchMapping("/{eventId}")
-//    public EventDto cancelEventByUser(@PathVariable Long userId,
-//                                      @PathVariable Long eventId) {
-//        log.info("cancel event with id {} by owner with id {}", eventId, userId);
-//        return eventService.cancelEventByUser(eventId, userId);
-//    }
-//
-//    @GetMapping("/{eventId}/requests")
-//    public List<ParticipationDto> getParticipationRequests(@PathVariable Long userId,
-//                                                           @PathVariable Long eventId) {
-//        log.info("get participation requests by owner {} of event with id {}", userId, eventId);
-//        return participationService.getParticipationRequests(eventId, userId);
-//    }
-//
-//    @PatchMapping("/{eventId}/requests/{reqId}/confirm")
-//    public ParticipationDto confirmParticipationRequest(@PathVariable Long userId,
-//                                                        @PathVariable Long eventId,
-//                                                        @PathVariable Long reqId) {
-//        log.info("confirm participation requests {} by owner {} of event with id {}", reqId, userId, eventId);
-//        return participationService.confirmParticipationRequest(eventId, userId, reqId);
-//    }
-//
-//    @PatchMapping("/{eventId}/requests/{reqId}/reject")
-//    public ParticipationDto rejectParticipationRequest(@PathVariable Long userId,
-//                                                       @PathVariable Long eventId,
-//                                                       @PathVariable Long reqId) {
-//        log.info("reject participation requests {} by owner {} of event with id {}", reqId, userId, eventId);
-//        return participationService.rejectParticipationRequest(eventId, userId, reqId);
-//    }

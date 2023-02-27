@@ -16,7 +16,7 @@ public class ErrorResponse {
         this.message = error;
         this.status = status;
         this.reason = reason;
-        this.timestamp=timestamp;
+        this.timestamp = timestamp;
     }
 
     public String getMessage() {
@@ -30,6 +30,7 @@ public class ErrorResponse {
     public String getReason() {
         return reason;
     }
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     public LocalDateTime getTimestamp() {
         return timestamp;

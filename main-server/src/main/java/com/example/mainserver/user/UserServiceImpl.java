@@ -24,17 +24,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User saveUser(User user) {
-        if(user.getName() == null){
+        if (user.getName() == null) {
             throw new UserBadNameException("имя не должно быть пустым");
         }
 
-     //   Category categoryName = categoryRepository.getCategoryByName(category.getName());
-        User suerName =  repository.getUserByName(user.getName());
+        User suerName = repository.getUserByName(user.getName());
         if (suerName != null) {
 
             throw new WrongPatchException("уже существует юзер с таким именем");
         }
-
 
 
         repository.save(user);
@@ -54,7 +52,6 @@ public class UserServiceImpl implements UserService {
     public List<User> getUsers(List<Long> ids, int from, int size) {
         Pageable pageable = PageRequest.of(from, size, Sort.by(Sort.Direction.ASC, "id"));
         return repository.findAllByIdIn(ids, pageable);
-
 
     }
 }

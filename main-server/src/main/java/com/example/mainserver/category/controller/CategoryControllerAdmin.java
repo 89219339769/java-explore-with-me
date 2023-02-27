@@ -29,7 +29,7 @@ public class CategoryControllerAdmin {
     @PostMapping
     public Category createCategory(@Valid @RequestBody Category category, HttpServletResponse response) {
 
-        if(category.getName()==null){
+        if (category.getName() == null) {
             throw new WrongCategoryNameException("Field: name. Error: must not be blank. Value: null");
         }
         response.setStatus(201);

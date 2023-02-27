@@ -2,7 +2,6 @@ package com.example.mainserver.event;
 
 import com.example.mainserver.category.model.Category;
 import com.example.mainserver.category.repository.CategoryRepository;
-import com.example.mainserver.compilation.model.Compilation;
 import com.example.mainserver.event.model.*;
 import com.example.mainserver.exceptions.*;
 
@@ -51,8 +50,6 @@ public class EventServiceImpl implements EventService {
 
         event.setCategory(categoryRepository.findById(eventDto.getCategory())
                 .orElseThrow(() -> new EventNotFoundException("Field: category. Error: must not be blank. Value: null")));
-
-
         event.setLocation(location);
         event.setInitiator(user);
         return EventMapper.toEventDto(eventRepository.save(event));
@@ -60,13 +57,11 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventDto publishEvent(Long eventId, UpdateEventAdminRequest updateEventAdminRequest) {
-
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new RuntimeException("event with id = " + eventId + " not found"));
         if (event.getEventDate().isBefore(LocalDateTime.now().plusHours(1))) {
             throw new RuntimeException("event must start min after one hour of now");
         }
-
         if (updateEventAdminRequest.getCategory() != null) {
             Category category = categoryRepository.findById(updateEventAdminRequest.getCategory())
                     .orElseThrow(() -> new RuntimeException("category with id = " + updateEventAdminRequest.getCategory() + " not found"));
@@ -75,7 +70,6 @@ public class EventServiceImpl implements EventService {
         if (updateEventAdminRequest.getAnnotation() != null) {
             event.setAnnotation(updateEventAdminRequest.getAnnotation());
         }
-
         if (updateEventAdminRequest.getDescription() != null) {
             event.setDescription(updateEventAdminRequest.getDescription());
         }
@@ -104,19 +98,15 @@ public class EventServiceImpl implements EventService {
         }
         if (updateEventAdminRequest.getTitle() != null)
             event.setTitle(updateEventAdminRequest.getTitle());
-
-
         if (event.getState() == PUBLISHED) {
             throw new WrongPatchException("событие уже опубликовано");
         }
-
         if (updateEventAdminRequest.getStateAction().equals("REJECT_EVENT")) {
             event.setState(CANCELED);
             EventDto eventDto = EventMapper.toEventDto(eventRepository.save(event));
-            //  throw new WrongPatchException("отмененное событие нельзя публиковать");
-        } else if( event.getState() == CANCELED)
+        } else if (event.getState() == CANCELED)
             throw new WrongPatchException("отмененное событие нельзя публиковать");
-           else event.setState(PUBLISHED);
+        else event.setState(PUBLISHED);
 
         EventDto eventDto = EventMapper.toEventDto(eventRepository.save(event));
 
@@ -159,7 +149,6 @@ public class EventServiceImpl implements EventService {
         if (event.getState() == PUBLISHED)
             throw new WrongPatchException("можно менять только события в статусе ожидания");
 
-/////////////////////////////////////
         if (event == null)
             throw new EventNotFoundException("Event with id = " + eventId + " was not found");
 
@@ -177,10 +166,7 @@ public class EventServiceImpl implements EventService {
             LocalDateTime startEvent = LocalDateTime.parse(eventDtoShort.getEventDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
             if (startEvent.isBefore(LocalDateTime.now())) {
                 throw new WrongPatchException("ошибка во времени  старта события");
-
-
             }
-
             event.setEventDate(startEvent);
         }
         if (eventDtoShort.getLocation() != null)
@@ -341,7 +327,6 @@ public class EventServiceImpl implements EventService {
 
 
     }
-
 
     private List<EventDto> listEventToListEventDto(List<Event> events) {
         List<EventDto> listEventDto = new ArrayList<>();
