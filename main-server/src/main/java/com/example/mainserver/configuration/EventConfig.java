@@ -1,17 +1,18 @@
 package com.example.mainserver.configuration;
 
+import eventcl.EventClient;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import eventcl.EventClient;
 
 @Configuration
 @AllArgsConstructor
 public class EventConfig {
 
     @Bean
-    EventClient eventClient() {
-        return new EventClient("http://localhost:9090", new RestTemplateBuilder());
+    public EventClient eventClient(@Value("${stats-server.url}") String serverUrl) {
+        return new EventClient(serverUrl, new RestTemplateBuilder());
     }
 }
