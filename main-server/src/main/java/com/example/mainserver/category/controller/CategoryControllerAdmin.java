@@ -27,11 +27,9 @@ public class CategoryControllerAdmin {
     }
 
     @PostMapping
-    public Category createCategory(@Valid @RequestBody Category category, HttpServletResponse response) {
+    public Category createCategory(@RequestBody Category category, HttpServletResponse response) {
 
-        if (category.getName() == null) {
-            throw new WrongCategoryNameException("Field: name. Error: must not be blank. Value: null");
-        }
+
         response.setStatus(201);
         log.info("create category");
         return categoryService.createCategory(category);

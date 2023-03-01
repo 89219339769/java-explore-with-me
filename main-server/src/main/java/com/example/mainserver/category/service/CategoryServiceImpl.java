@@ -52,7 +52,9 @@ public class CategoryServiceImpl implements CategoryService {
 
             throw new WrongPatchException("уже существует категория с таким именем");
         }
-
+        if (category.getName() == null) {
+            throw new WrongCategoryNameException("Field: name. Error: must not be blank. Value: null");
+        }
 
         return categoryRepository.save(category);
     }
@@ -76,14 +78,15 @@ public class CategoryServiceImpl implements CategoryService {
     public List<Category> getCategories(int from, int size) {
         Pageable pageable = PageRequest.of(from, size, Sort.by(Sort.Direction.ASC, "id"));
         Page<Category> categoryPage = categoryRepository.findAll(pageable);
-        List<Category> categoryList = categoryPage.getContent();
-        return categoryList;
+        return categoryPage.getContent();
     }
 
     @Override
     public Category getCategory(Long catId) {
-        Category category = categoryRepository.findById(catId)
+        return categoryRepository.findById(catId)
                 .orElseThrow(() -> new CategoryNotFounfExeption("Category with id = " + catId + " not found"));
-        return category;
+
+
+
     }
 }
