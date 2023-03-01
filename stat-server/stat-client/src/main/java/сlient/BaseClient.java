@@ -1,4 +1,4 @@
-package statistic_сlient;
+package сlient;
 
 
 import org.springframework.http.*;
