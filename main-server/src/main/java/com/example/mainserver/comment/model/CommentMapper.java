@@ -1,13 +1,11 @@
 package com.example.mainserver.comment.model;
 
-import com.example.mainserver.event.model.Event;
-import com.example.mainserver.event.model.NewEventDto;
-import com.example.mainserver.event.model.State;
+
 
 import java.time.LocalDateTime;
 
 import static com.example.mainserver.comment.Stat.WAITING;
-import static com.example.mainserver.event.model.State.PENDING;
+
 
 public class CommentMapper {
 
