@@ -29,7 +29,7 @@ services:
         - POSTGRES_PASSWORD=iamroot
 
   stats-server:
-    build: stat-server
+    build: stat-server/stat-src
     container_name: explore-with-me-stats
     depends_on:
       - stats-db
