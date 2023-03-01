@@ -3,7 +3,6 @@ package com.example.mainserver.category.controller;
 
 import com.example.mainserver.category.model.Category;
 import com.example.mainserver.category.service.CategoryService;
-import com.example.mainserver.exceptions.WrongCategoryNameException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
