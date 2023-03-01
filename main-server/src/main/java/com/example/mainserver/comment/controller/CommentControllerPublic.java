@@ -2,7 +2,6 @@ package com.example.mainserver.comment.controller;
 
 import com.example.mainserver.comment.CommentService;
 import com.example.mainserver.comment.model.Comment;
-import com.example.mainserver.participation.model.ParticipationRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;

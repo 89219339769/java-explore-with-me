@@ -2,7 +2,7 @@ package com.example.mainserver.comment;
 
 import com.example.mainserver.comment.model.Comment;
 import com.example.mainserver.comment.model.CommentDto;
-import com.example.mainserver.event.model.EventDto;
+
 
 import java.util.List;
 
