@@ -34,14 +34,6 @@ public class ParticipationMapper {
     }
 
 
-//    public static Request toRequest(Event event, User requester) {
-//        Request request = new Request();
-//        request.setEvent(event);
-//        request.setRequester(requester);
-//        request.setCreated(LocalDateTime.now());
-//        request.setStatus(event.getRequestModeration() ? PENDING : CONFIRMED);
-//        return request;
-//    }
 
     public static ParticipationRequestDto toParticipationRequestDto(Participation request) {
         return new ParticipationRequestDto(

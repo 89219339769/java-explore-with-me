@@ -97,13 +97,11 @@ public class ParticipationServiceImpl implements ParticipationService {
 
 
 
-        ParticipationListDto participationListDto = ParticipationListDto
+        return ParticipationListDto
                 .builder()
                 .confirmedRequests(confirmedRequests)
                 .rejectedRequests(rejectedRequests)
                 .build();
-
-        return participationListDto;
     }
 
 

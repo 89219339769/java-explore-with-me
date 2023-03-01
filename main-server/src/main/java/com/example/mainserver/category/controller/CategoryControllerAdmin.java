@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 @Slf4j
 @RestController
 @RequestMapping("/admin/categories")
@@ -29,7 +31,7 @@ public class CategoryControllerAdmin {
     public Category createCategory(@RequestBody Category category, HttpServletResponse response) {
 
 
-        response.setStatus(201);
+        response.setStatus(CREATED.value());
         log.info("create category");
         return categoryService.createCategory(category);
     }
@@ -38,7 +40,7 @@ public class CategoryControllerAdmin {
     public void deleteCategory(@PathVariable Long id, HttpServletResponse response) {
         log.info("delete category with id {}", id);
 
-        response.setStatus(204);
+        response.setStatus(NO_CONTENT.value());
         categoryService.deleteCategory(id);
     }
 }

@@ -11,7 +11,7 @@ import java.util.List;
 public interface ParticipationService {
 
 
-    public ParticipationDto createParticipationRequest(Long userId, Long eventId);
+    ParticipationDto createParticipationRequest(Long userId, Long eventId);
 
 
     ParticipationListDto confirmParticipationRequest(Long userId, Long eventId, ParticipationChangeStatus participationChangeStatus);
