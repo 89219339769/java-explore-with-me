@@ -1,4 +1,4 @@
-package com.example.mainserver.statisticClient;
+package statistic_сlient;
 
 
 import lombok.Builder;
