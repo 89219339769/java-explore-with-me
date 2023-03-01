@@ -21,8 +21,10 @@ public class StatServiceImpl implements StatService {
     private final StatRepository statRepository;
 
     @Override
-    public void saveStat(EndpointHit endpointHit) {
-        statRepository.save(endpointHit);
+    public EndpointHit saveStat(EndpointHit endpointHit) {
+
+        return    statRepository.save(endpointHit);
+
     }
 
     @Override
@@ -30,7 +32,7 @@ public class StatServiceImpl implements StatService {
         LocalDateTime startDate = LocalDateTime.parse(start, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         LocalDateTime endDate = LocalDateTime.parse(end, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
-        if (Boolean.TRUE.equals(unique)) {
+        if (unique) {
             return getUniqIpStat(startDate, endDate, uris);
 
         } else {
@@ -88,19 +90,20 @@ public class StatServiceImpl implements StatService {
 
     private List<ViewStats> sortAndFind(List<ViewStats> viewStatsSort, List<String> uris) {
         List<ViewStats> viewStatsSortFiltred = new ArrayList<>();
-        viewStatsSort = viewStatsSort.stream()
+        List<ViewStats> viewStatsSortFiltredUri = new ArrayList<>();
+        viewStatsSortFiltred = viewStatsSort.stream()
                 .sorted((o1, o2) -> {
                     int result = o1.getHits().compareTo(o2.getHits());
                     return result * -1;
                 })
                 .collect(Collectors.toList());
 
-        for (ViewStats viewStat : viewStatsSort) {
+        for (ViewStats viewStat :  viewStatsSortFiltred) {
             if (uris.contains(viewStat.getUri()))
-                viewStatsSortFiltred.add(viewStat);
+                viewStatsSortFiltredUri.add(viewStat);
         }
 
-        return viewStatsSortFiltred.stream()
+        return viewStatsSortFiltredUri.stream()
                 .distinct()
                 .collect(Collectors.toList());
     }
