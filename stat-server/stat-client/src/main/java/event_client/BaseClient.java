@@ -1,4 +1,4 @@
-package сlient;
+package event_client;
 
 
 import org.springframework.http.*;
