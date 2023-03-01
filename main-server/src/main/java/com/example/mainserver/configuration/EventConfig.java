@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import event_client.EventClient;
+import eventcl.EventClient;
 
 @Configuration
 @AllArgsConstructor

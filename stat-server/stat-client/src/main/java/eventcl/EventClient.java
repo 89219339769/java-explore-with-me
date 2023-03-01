@@ -1,4 +1,4 @@
-package event_client;
+package eventcl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

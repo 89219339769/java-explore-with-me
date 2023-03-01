@@ -3,8 +3,8 @@ package com.example.mainserver.event.controller;
 import com.example.mainserver.event.EventService;
 import com.example.mainserver.event.model.EventDto;
 import com.example.mainserver.event.model.EventDtoShort;
-import event_client.EndpointHit;
-import event_client.EventClient;
+import eventcl.EndpointHit;
+import eventcl.EventClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
