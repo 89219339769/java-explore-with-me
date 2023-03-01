@@ -4,6 +4,7 @@ import com.example.mainserver.participation.model.Participation;
 import com.example.mainserver.participation.model.StatusRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -34,5 +35,10 @@ public interface ParticipationRepository extends JpaRepository<Participation, Lo
 
 
     int countParticipationByEventIdAndStatus(Long eventId, StatusRequest status);
+
+
+
+    @Query(value = "SELECT r FROM Participation r WHERE r.event.id = :eventId AND r.id IN :requestIds")
+    List<Participation> findStoredUpdRequests(@Param("eventId") Long eventId, @Param("requestIds") List<Long> ids);
 
 }

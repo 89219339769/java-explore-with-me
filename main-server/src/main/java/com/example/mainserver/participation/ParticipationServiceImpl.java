@@ -62,15 +62,12 @@ public class ParticipationServiceImpl implements ParticipationService {
 
     @Override
     public ParticipationListDto confirmParticipationRequest(Long userId, Long eventId, ParticipationChangeStatus participationChangeStatus) {
-        List<Integer> participationIds = participationChangeStatus.getRequestIds();
         List<ParticipationDto> confirmedRequests = new ArrayList<>();
         List<ParticipationDto> rejectedRequests = new ArrayList<>();
+        List<Participation> requestsForUpdate = participationRepository.findStoredUpdRequests(eventId, participationChangeStatus.getRequestIds());
 
+        for (Participation participation : requestsForUpdate) {
 
-        for (Integer participationId : participationIds) {
-
-            Participation participation = participationRepository.findById(Long.valueOf(participationId))
-                    .orElseThrow(() -> new RuntimeException("event with id = " + eventId + " not found"));
             if (participation.getStatus().equals(REJECTED)) {
                 rejectedRequests.add(ParticipationMapper.toParticipationDto(participation));
             }
@@ -78,7 +75,6 @@ public class ParticipationServiceImpl implements ParticipationService {
                 throw new WrongPatchException("only participation request with status pending can be approval");
             }
             if (participation.getStatus().equals(PENDING)) {
-                List<Participation> listPart = participationRepository.getParticipations(eventId);
                 if (participation.getEvent().getParticipantLimit() <= participationRepository.countParticipationByEventIdAndStatus(eventId, CONFIRMED)) {
                     participation.setStatus(REJECTED);
                     participationRepository.save(participation);
@@ -92,13 +88,13 @@ public class ParticipationServiceImpl implements ParticipationService {
                     }
                     if (participation.getStatus().equals(CONFIRMED)) {
                         participation.getEvent().setParticipantLimit(participation.getEvent().getParticipantLimit() - 1);
-                        StatusRequest statusRequest = participation.getStatus();
                         participationRepository.save(participation);
                         confirmedRequests.add(ParticipationMapper.toParticipationDto(participation));
                     }
                 }
             }
         }
+
 
 
         ParticipationListDto participationListDto = ParticipationListDto
