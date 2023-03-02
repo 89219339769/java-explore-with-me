@@ -21,10 +21,10 @@ public class CommentDto {
     private String description;
 
 
-    private User user;
+    private Long userId;
 
 
-    private Event event;
+    private Long eventId;
 
 
     private LocalDateTime createdOn;

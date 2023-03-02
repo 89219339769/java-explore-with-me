@@ -29,7 +29,7 @@ public class CommentServiceImpl implements CommentService {
 
     private final EventRepository eventRepository;
 
-
+    private final CommentMapper commentMapper;
     @Override
     public CommentDto createComment(CommentDto commentDto, Long userId, Long eventId) {
         User user = userRepository.findById(userId)
@@ -42,15 +42,19 @@ public class CommentServiceImpl implements CommentService {
         if (comment != null) {
             throw new RuntimeException("Можно коментировать событие только один раз");
         }
+        if (commentDto.getDescription().isBlank()) {
+            throw new RuntimeException("Необходимо добавить описание");
+        }
 
         if (event.getState().equals(State.PENDING) && event.getState().equals(State.CANCELED))
             throw new RuntimeException("можно комментировать только одобренные события");
 
 
-        commentDto.setUser(user);
-        commentDto.setEvent(event);
+        commentDto.setUserId(user.getId());
+        commentDto.setEventId(event.getId());
+ Comment comment1 = commentMapper.toComment(commentDto);
 
-        commentRepository.save(CommentMapper.toComment(commentDto));
+        commentRepository.save(commentMapper.toComment(commentDto));
         return commentDto;
 
     }
