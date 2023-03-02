@@ -1,6 +1,4 @@
 package com.example.mainserver.comment.model;
-import com.example.mainserver.event.model.Event;
-import com.example.mainserver.user.model.User;
 import lombok.*;
 import java.time.LocalDateTime;
 

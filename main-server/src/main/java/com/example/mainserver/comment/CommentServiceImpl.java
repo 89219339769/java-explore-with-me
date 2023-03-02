@@ -30,6 +30,7 @@ public class CommentServiceImpl implements CommentService {
     private final EventRepository eventRepository;
 
     private final CommentMapper commentMapper;
+
     @Override
     public CommentDto createComment(CommentDto commentDto, Long userId, Long eventId) {
         User user = userRepository.findById(userId)
@@ -52,7 +53,7 @@ public class CommentServiceImpl implements CommentService {
 
         commentDto.setUserId(user.getId());
         commentDto.setEventId(event.getId());
- Comment comment1 = commentMapper.toComment(commentDto);
+        Comment comment1 = commentMapper.toComment(commentDto);
 
         commentRepository.save(commentMapper.toComment(commentDto));
         return commentDto;

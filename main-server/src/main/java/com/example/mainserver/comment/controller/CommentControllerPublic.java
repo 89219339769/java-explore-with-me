@@ -2,15 +2,9 @@ package com.example.mainserver.comment.controller;
 
 import com.example.mainserver.comment.CommentService;
 import com.example.mainserver.comment.model.Comment;
-import com.example.mainserver.event.model.EventDtoShort;
-import eventcl.EndpointHit;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Slf4j
