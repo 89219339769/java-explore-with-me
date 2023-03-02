@@ -14,4 +14,8 @@ public interface CommentService {
     Comment regectComment(Long userId, Long comentId);
 
     List<Comment> getCommentsByEventId(Long eventId);
+
+    CommentDto patchComment(CommentDto commentDto, Long userId, Long eventId);
+
+    void deleteComment(Long userId, Long eventId);
 }

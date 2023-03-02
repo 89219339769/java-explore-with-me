@@ -12,4 +12,9 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     @Query("select c from Comment c where  c.event.id =?1 " +
             "order by c.createdOn asc")
     List<Comment> findAllByEventId(Long eventId);
+
+    @Query("select c from Comment c where  c.user.id =?1 " +
+            "and c.event.id =?2 " +
+            "order by c.createdOn asc")
+    Comment findCommetnByserIdAnfEventId(Long userId, Long eventId);
 }

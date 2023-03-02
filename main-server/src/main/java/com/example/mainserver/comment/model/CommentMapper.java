@@ -24,19 +24,17 @@ public class CommentMapper {
         return build;
     }
 
-//    public static CommentDto toCommentDto(Comment comment) {
-//        Comment build = Comment
-//                .builder()
-//
-//                .description(commentDto.getDescription())
-//                .createdOn(LocalDateTime.now())
-//                .state(WAITING)
-//                .createdOn(LocalDateTime.now())
-//                .user(commentDto.getUser())
-//                .event(commentDto.getEvent())
-//                .build();
-//        return build;
-//    }
+    public static CommentDto toCommentDto(Comment comment) {
+        return   CommentDto
+                .builder()
+                .description(comment.getDescription())
+                .createdOn(LocalDateTime.now())
+                .createdOn(LocalDateTime.now())
+                .user(comment.getUser())
+                .event(comment.getEvent())
+                .build();
+
+    }
 
 
 

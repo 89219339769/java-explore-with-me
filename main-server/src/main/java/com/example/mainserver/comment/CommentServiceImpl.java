@@ -34,9 +34,15 @@ public class CommentServiceImpl implements CommentService {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new CompilationNotFounfExeption("user with id = " + userId + " not found"));
 
-        if (event.getState().equals(State.PENDING) && event.getState().equals(State.CANCELED))
 
+        Comment comment = commentRepository.findCommetnByserIdAnfEventId(userId, eventId);
+        if (comment != null) {
+            throw new RuntimeException("Можно коментировать событие только один раз");
+        }
+
+        if (event.getState().equals(State.PENDING) && event.getState().equals(State.CANCELED))
             throw new RuntimeException("можно комментировать только одобренные события");
+
 
         commentDto.setUser(user);
         commentDto.setEvent(event);
@@ -77,5 +83,40 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public List<Comment> getCommentsByEventId(Long eventId) {
         return commentRepository.findAllByEventId(eventId);
+    }
+
+    @Override
+    public CommentDto patchComment(CommentDto commentDto, Long userId, Long eventId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CompilationNotFounfExeption("user with id = " + userId + " not found"));
+
+        Comment comment = commentRepository.findById(commentDto.getId())
+                .orElseThrow(() -> new CompilationNotFounfExeption("comment with id = " + userId + " not found"));
+        if (!comment.getState().equals(WAITING)) {
+            throw new RuntimeException("Можно только изменять комментарии со статусом  WAITING");
+        }
+        if (commentDto.getDescription() == null) {
+            throw new RuntimeException("нечего изменять, нужно указать описание");
+        }
+        if (commentDto.getId() == null) {
+            throw new RuntimeException("необходимо указать номеркоммента для обновления");
+        }
+
+        if (!user.getId().equals(comment.getUser().getId())) {
+
+            throw new RuntimeException("можно изменять только собственные комменты");
+        }
+        comment.setDescription(commentDto.getDescription());
+        commentRepository.save(comment);
+        return CommentMapper.toCommentDto(comment);
+    }
+
+    @Override
+    public void deleteComment(Long userId, Long eventId) {
+        Comment comment = commentRepository.findCommetnByserIdAnfEventId(userId, eventId);
+        if (comment == null) {
+            throw new RuntimeException("коментарий с таким номером не найден");
+        }
+        commentRepository.delete(comment);
     }
 }

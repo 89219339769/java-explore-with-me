@@ -28,8 +28,19 @@ public class CommentControllerUser {
         return commentService.createComment(commentDto, userId, eventId);
     }
 
-    //Добавить патч коммента, но его можно делать только пока админ не опубликует коммент
-    //Добавить удаление коммента, но его можно делать только пока админ не опубликует коммент
+    @PatchMapping("/{eventId}")
+    public CommentDto patchComment(@Valid @RequestBody CommentDto commentDto,
+                                   @Positive @PathVariable Long userId,
+                                   @Positive @PathVariable Long eventId) {
+        log.info("create comment by user {}", userId);
+        return commentService.patchComment(commentDto, userId, eventId);
+    }
 
-
+    @DeleteMapping("/{eventId}")
+    public void deleteComment(
+            @Positive @PathVariable Long userId,
+            @Positive @PathVariable Long eventId) {
+        log.info("create comment by user {}", userId);
+        commentService.deleteComment(userId, eventId);
+    }
 }
