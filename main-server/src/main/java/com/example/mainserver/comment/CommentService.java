@@ -13,9 +13,13 @@ public interface CommentService {
 
     Comment regectComment(Long userId, Long comentId);
 
-    List<Comment> getCommentsByEventId(Long eventId);
+    List<Comment> getCommentsByEventId(Long eventId, int from, int size);
 
     CommentDto patchComment(CommentDto commentDto, Long userId, Long eventId);
 
     void deleteComment(Long userId, Long eventId);
+
+    Comment getComment(Long userId, Long eventId);
+
+    List<Comment> getCommentsByUser(Long userId);
 }

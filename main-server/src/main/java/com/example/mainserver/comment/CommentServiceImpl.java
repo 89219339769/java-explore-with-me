@@ -10,6 +10,9 @@ import com.example.mainserver.exceptions.CompilationNotFounfExeption;
 import com.example.mainserver.user.UserRepository;
 import com.example.mainserver.user.model.User;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -81,8 +84,9 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<Comment> getCommentsByEventId(Long eventId) {
-        return commentRepository.findAllByEventId(eventId);
+    public List<Comment> getCommentsByEventId(Long eventId, int from, int size) {
+        Pageable pageable = PageRequest.of(from, size, Sort.by(Sort.Direction.ASC, "id"));
+        return commentRepository.findAllByEventId(eventId, pageable);
     }
 
     @Override
@@ -118,5 +122,19 @@ public class CommentServiceImpl implements CommentService {
             throw new RuntimeException("коментарий с таким номером не найден");
         }
         commentRepository.delete(comment);
+    }
+
+    @Override
+    public Comment getComment(Long userId, Long eventId) {
+        Comment comment = commentRepository.findCommetnByserIdAnfEventId(userId, eventId);
+        if (comment == null) {
+            throw new RuntimeException("коментарий с таким номером не найден");
+        }
+        return comment;
+    }
+
+    @Override
+    public List<Comment> getCommentsByUser(Long userId) {
+        return commentRepository.findAllCommentsByUserId(userId);
     }
 }

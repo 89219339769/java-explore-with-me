@@ -2,12 +2,14 @@ package com.example.mainserver.comment.controller;
 
 
 import com.example.mainserver.comment.CommentService;
+import com.example.mainserver.comment.model.Comment;
 import com.example.mainserver.comment.model.CommentDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -43,4 +45,22 @@ public class CommentControllerUser {
         log.info("create comment by user {}", userId);
         commentService.deleteComment(userId, eventId);
     }
+
+    @GetMapping("/{eventId}")
+    public Comment getComment(
+            @Positive @PathVariable Long userId,
+            @Positive @PathVariable Long eventId) {
+        log.info("create comment by user {}", userId);
+        return commentService.getComment(userId, eventId);
+    }
+
+
+    @GetMapping()
+    public List<Comment> getComments(
+            @Positive @PathVariable Long userId) {
+        log.info("create comment by user {}", userId);
+        return commentService.getCommentsByUser(userId);
+    }
+
+
 }
