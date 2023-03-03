@@ -131,7 +131,7 @@
 				"method": "PATCH",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/admin/2/comments/2/approve",
+					"raw": "http://localhost:8080/admin/2/comments/1/approve",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -141,7 +141,7 @@
 						"admin",
 						"2",
 						"comments",
-						"2",
+						"1",
 						"approve"
 					]
 				}
@@ -236,7 +236,7 @@
 					"script": {
 						"exec": [
 							"pm.test(\"Ответ должен содержать код статуса 400 и данные в формате json\", function () {\r",
-							"    pm.response.to.have.status(400);\r",
+							"    pm.response.to.have.status(404);\r",
 							"    pm.response.to.be.withBody;\r",
 							"    pm.response.to.be.json;\r",
 							"});"
@@ -258,7 +258,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/users/3/comments/1",
+					"raw": "http://localhost:8080/users/3333/comments/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -266,7 +266,7 @@
 					"port": "8080",
 					"path": [
 						"users",
-						"3",
+						"3333",
 						"comments",
 						"1"
 					]
