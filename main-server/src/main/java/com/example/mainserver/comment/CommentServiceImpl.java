@@ -7,6 +7,8 @@ import com.example.mainserver.event.EventRepository;
 import com.example.mainserver.event.model.Event;
 import com.example.mainserver.event.model.State;
 import com.example.mainserver.exceptions.CompilationNotFounfExeption;
+import com.example.mainserver.exceptions.RepeateCommentException;
+import com.example.mainserver.exceptions.WrongPatchException;
 import com.example.mainserver.user.UserRepository;
 import com.example.mainserver.user.model.User;
 import lombok.AllArgsConstructor;
@@ -41,14 +43,14 @@ public class CommentServiceImpl implements CommentService {
 
         Comment comment = commentRepository.findCommetnByserIdAnfEventId(userId, eventId);
         if (comment != null) {
-            throw new RuntimeException("Можно коментировать событие только один раз");
+            throw new RepeateCommentException("Можно коментировать событие только один раз");
         }
         if (commentDto.getDescription().isBlank()) {
             throw new RuntimeException("Необходимо добавить описание");
         }
 
         if (event.getState().equals(State.PENDING) && event.getState().equals(State.CANCELED))
-            throw new RuntimeException("можно комментировать только одобренные события");
+            throw new WrongPatchException("можно комментировать только одобренные события");
 
 
         commentDto.setUserId(user.getId());
@@ -68,7 +70,7 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = commentRepository.findById(comentId)
                 .orElseThrow(() -> new CompilationNotFounfExeption("comment with id = " + userId + " not found"));
         if (!comment.getState().equals(WAITING)) {
-            throw new RuntimeException("Можно только публиковть комментарии со статусом  WAITING");
+            throw new RepeateCommentException("Можно публиковать коммент только со статусом waiting");
         }
         comment.setState(APPROVED);
         return commentRepository.save(comment);
@@ -91,6 +93,8 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public List<Comment> getCommentsByEventId(Long eventId, int from, int size) {
         Pageable pageable = PageRequest.of(from, size, Sort.by(Sort.Direction.ASC, "id"));
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new CompilationNotFounfExeption("event with id  not found"));
         return commentRepository.findAllByEventId(eventId, pageable);
     }
 
@@ -99,22 +103,16 @@ public class CommentServiceImpl implements CommentService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CompilationNotFounfExeption("user with id = " + userId + " not found"));
 
-        Comment comment = commentRepository.findById(commentDto.getId())
-                .orElseThrow(() -> new CompilationNotFounfExeption("comment with id = " + userId + " not found"));
+        Comment comment = commentRepository.findCommetnByserIdAnfEventId(userId, eventId);
+        if (comment == null) throw new CompilationNotFounfExeption("comment with id = " + userId + " not found");
         if (!comment.getState().equals(WAITING)) {
-            throw new RuntimeException("Можно только изменять комментарии со статусом  WAITING");
+            throw new WrongPatchException("Можно только изменять комментарии со статусом  WAITING");
         }
         if (commentDto.getDescription() == null) {
             throw new RuntimeException("нечего изменять, нужно указать описание");
         }
-        if (commentDto.getId() == null) {
-            throw new RuntimeException("необходимо указать номеркоммента для обновления");
-        }
 
-        if (!user.getId().equals(comment.getUser().getId())) {
 
-            throw new RuntimeException("можно изменять только собственные комменты");
-        }
         comment.setDescription(commentDto.getDescription());
         commentRepository.save(comment);
         return CommentMapper.toCommentDto(comment);
