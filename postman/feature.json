@@ -10,38 +10,23 @@
 			"name": "add comment",
 			"event": [
 				{
-					"listen": "prerequest",
-					"script": {
-						"exec": [
-							"\r",
-							"\r",
-							""
-						],
-						"type": "text/javascript"
-					}
-				},
-				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"let serverResponse = pm.response;\r",
-							"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function() {\r",
-							"    pm.response.to.be.ok; // код ответа должен быть равен 200 OK\r",
-							"    pm.response.to.be.withBody; // ответ должен содержать тело\r",
-							"    pm.response.to.be.json; // и тело ответа должно быть в формате JSON\r",
-							"}); \r",
-							"\r",
-							"const source = JSON.parse(pm.request.body.raw);\r",
-							"const target = pm.response.json();\r",
-							"\r",
-							"pm.test(\"Событие должно содержать поля: description, userId, eventId \", function () {\r",
-							"pm.expect(target).to.have.property('id');\r",
-							"pm.expect(target).to.have.property('description');\r",
-							"pm.expect(target).to.have.property('userId');\r",
-							"pm.expect(target).to.have.property('eventId');\r",
-							"pm.expect(target).to.have.property('createdOn');\r",
-							"});\r",
-							""
+							"\tlet serverResponse = pm.response;\r",
+							"\tpm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\",function() { pm.response.to.be.ok; \r",
+							"                     pm.response.to.be.withBody; // ответ должен содержать тело\",\r",
+							"                     pm.response.to.be.json; // и тело ответа должно быть в формате JSON\",\r",
+							"\t\t\t\t\t\t\t}); \r",
+							"\tconst source = JSON.parse(pm.request.body.raw)\r",
+							"\tconst target = pm.response.json()\r",
+							"\tpm.test(\"Событие должно содержать поля: description, userId, eventId \", function () {\r",
+							"\tpm.expect(target).to.have.property('id');\r",
+							"    pm.expect(target).to.have.property('description');\r",
+							"\tpm.expect(target).to.have.property('userId');\r",
+							"\tpm.expect(target).to.have.property('eventId');\r",
+							"\tpm.expect(target).to.have.property('createdOn');\r",
+							"\t})"
 						],
 						"type": "text/javascript"
 					}
@@ -60,7 +45,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/users/1/comments/1",
+					"raw": "http://localhost:8080/users/3/comments/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -68,7 +53,7 @@
 					"port": "8080",
 					"path": [
 						"users",
-						"1",
+						"3",
 						"comments",
 						"1"
 					]
@@ -124,11 +109,29 @@
 		},
 		{
 			"name": "Approve comment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let serverResponse = pm.response;\r",
+							"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function() {\r",
+							"    pm.response.to.be.ok; // код ответа должен быть равен 200 OK\r",
+							"    pm.response.to.be.withBody; // ответ должен содержать тело\r",
+							"    pm.response.to.be.json; // и тело ответа должно быть в формате JSON\r",
+							"}); \r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "PATCH",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/admin/1/comments/1/approve",
+					"raw": "http://localhost:8080/admin/2/comments/2/approve",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -136,7 +139,45 @@
 					"port": "8080",
 					"path": [
 						"admin",
-						"1",
+						"2",
+						"comments",
+						"2",
+						"approve"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Approve commetn with wrong status",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Ответ должен содержать код статуса 409 и данные в формате json\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"    pm.response.to.be.withBody;\r",
+							"    pm.response.to.be.json;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/admin/2/comments/1/approve",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"2",
 						"comments",
 						"1",
 						"approve"
@@ -146,15 +187,30 @@
 			"response": []
 		},
 		{
-			"name": "Approve commetn with wrong status",
-			"request": {
-				"method": "GET",
-				"header": []
-			},
-			"response": []
-		},
-		{
 			"name": "get comments by id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function () {\r",
+							"    pm.response.to.be.ok;    \r",
+							"    pm.response.to.be.withBody;\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"\r",
+							"const target = pm.response.json();\r",
+							"\r",
+							"\r",
+							"\r",
+							"pm.test(\"Данные в ответе должны соответствовать данным в запросе\", function () {\r",
+							"    pm.expect(target.description).to.not.be.null;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -176,41 +232,210 @@
 		},
 		{
 			"name": "get comments witn wrong id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Ответ должен содержать код статуса 409 и данные в формате json\", function () {\r",
+							"    pm.response.to.have.status(404);\r",
+							"    pm.response.to.be.withBody;\r",
+							"    pm.response.to.be.json;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "GET",
-				"header": []
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/event/99/comments",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"event",
+						"99",
+						"comments"
+					]
+				}
 			},
 			"response": []
 		},
 		{
 			"name": "patchComent",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\tlet serverResponse = pm.response;\r",
+							"\tpm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\",function() { pm.response.to.be.ok; \r",
+							"                     pm.response.to.be.withBody; // ответ должен содержать тело\",\r",
+							"                     pm.response.to.be.json; // и тело ответа должно быть в формате JSON\",\r",
+							"\t\t\t\t\t\t\t}); \r",
+							"\tconst source = JSON.parse(pm.request.body.raw)\r",
+							"\tconst target = pm.response.json()\r",
+							"\tpm.test(\"Событие должно содержать поля: id, description, userId, eventId, createdOn \", function () {\r",
+							"\tpm.expect(target).to.have.property('id');\r",
+							"    pm.expect(target).to.have.property('description');\r",
+							"\tpm.expect(target).to.have.property('userId');\r",
+							"\tpm.expect(target).to.have.property('eventId');\r",
+							"\tpm.expect(target).to.have.property('createdOn');\r",
+							"\t})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
-				"method": "GET",
-				"header": []
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"description\": \"не yt очень нормальное событие\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/users/3/comments/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						"3",
+						"comments",
+						"1"
+					]
+				}
 			},
 			"response": []
 		},
 		{
 			"name": "wrong patch comment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Ответ должен содержать код статуса 409 и данные в формате json\", function () {\r",
+							"    pm.response.to.have.status(409);\r",
+							"    pm.response.to.be.withBody;\r",
+							"    pm.response.to.be.json;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
-				"method": "GET",
-				"header": []
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"description\": \"не yt очень нrtrtормальное событие\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/users/1/comments/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						"1",
+						"comments",
+						"1"
+					]
+				}
 			},
 			"response": []
 		},
 		{
 			"name": "get comments by eventId",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function () {\r",
+							"    pm.response.to.be.ok;    \r",
+							"    pm.response.to.be.withBody;\r",
+							"    pm.response.to.be.json;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "GET",
-				"header": []
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/event/1/comments",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"event",
+						"1",
+						"comments"
+					]
+				}
 			},
 			"response": []
 		},
 		{
 			"name": "get comments by wrongId",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Ответ должен содержать код статуса 409 и данные в формате json\", function () {\r",
+							"    pm.response.to.have.status(404);\r",
+							"    pm.response.to.be.withBody;\r",
+							"    pm.response.to.be.json;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "GET",
-				"header": []
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/event/111/comments",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"event",
+						"111",
+						"comments"
+					]
+				}
 			},
 			"response": []
 		}
