@@ -69,7 +69,7 @@
 					"script": {
 						"exec": [
 							"pm.test(\"Ответ должен содержать код статуса 409 и данные в формате json\", function () {\r",
-							"    pm.response.to.have.status(400);\r",
+							"    pm.response.to.have.status(404);\r",
 							"    pm.response.to.be.withBody;\r",
 							"    pm.response.to.be.json;\r",
 							"});"
@@ -91,7 +91,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/users/3/comments/1",
+					"raw": "http://localhost:8080/users/888/comments/1111",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -99,9 +99,9 @@
 					"port": "8080",
 					"path": [
 						"users",
-						"3",
+						"888",
 						"comments",
-						"1"
+						"1111"
 					]
 				}
 			},
@@ -235,20 +235,11 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"\tlet serverResponse = pm.response;\r",
-							"\tpm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\",function() { pm.response.to.be.ok; \r",
-							"                     pm.response.to.be.withBody; // ответ должен содержать тело\",\r",
-							"                     pm.response.to.be.json; // и тело ответа должно быть в формате JSON\",\r",
-							"\t\t\t\t\t\t\t}); \r",
-							"\tconst source = JSON.parse(pm.request.body.raw)\r",
-							"\tconst target = pm.response.json()\r",
-							"\tpm.test(\"Событие должно содержать поля: id, description, userId, eventId, createdOn \", function () {\r",
-							"\tpm.expect(target).to.have.property('id');\r",
-							"    pm.expect(target).to.have.property('description');\r",
-							"\tpm.expect(target).to.have.property('userId');\r",
-							"\tpm.expect(target).to.have.property('eventId');\r",
-							"\tpm.expect(target).to.have.property('createdOn');\r",
-							"\t})"
+							"pm.test(\"Ответ должен содержать код статуса 400 и данные в формате json\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"    pm.response.to.be.withBody;\r",
+							"    pm.response.to.be.json;\r",
+							"});"
 						],
 						"type": "text/javascript"
 					}
