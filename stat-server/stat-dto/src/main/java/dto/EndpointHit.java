@@ -1,4 +1,4 @@
-package eventcl;
+package dto;
 
 
 import lombok.Builder;
