@@ -1,4 +1,4 @@
-package com.example.mainserver.statisticClient;
+package eventcl;
 
 
 import org.springframework.http.*;

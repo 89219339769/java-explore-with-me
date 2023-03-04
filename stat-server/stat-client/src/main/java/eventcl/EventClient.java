@@ -1,7 +1,7 @@
-package com.example.mainserver.statisticClient;
+package eventcl;
 
+import dto.EndpointHit;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -14,7 +14,7 @@ public class EventClient extends BaseClient {
     private static final String API_PREFIX = "/hit";
 
     @Autowired
-    public EventClient(@Value("${stats-server.url}") String serverUrl, RestTemplateBuilder builder) {
+    public EventClient(String serverUrl, RestTemplateBuilder builder) {
         super(
                 builder
                         .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl + API_PREFIX))

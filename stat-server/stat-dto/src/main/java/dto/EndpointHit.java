@@ -1,4 +1,4 @@
-package com.example.mainserver.statisticClient;
+package dto;
 
 
 import lombok.Builder;

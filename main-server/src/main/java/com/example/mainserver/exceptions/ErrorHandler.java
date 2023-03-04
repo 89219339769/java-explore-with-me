@@ -111,4 +111,12 @@ public class ErrorHandler {
         return new ErrorResponse(e.getMessage(), "BAD_REQUEST", "Incorrectly made request.",
                 LocalDateTime.now());
     }
+
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse objectWrongEnterExeption(final RepeateCommentException e) {
+        return new ErrorResponse(e.getMessage(), "BAD_REQUEST", "you can comment on the event only once.",
+                LocalDateTime.now());
+    }
 }
